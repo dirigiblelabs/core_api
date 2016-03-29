@@ -23,3 +23,25 @@ $.getResponse().getWriter().println(new java.lang.String(response.data));
 $.getResponse().getWriter().flush();
 $.getResponse().getWriter().close();
 ```
+
+# Mail API
+- Module **('api/mail')**
+- Example usage:
+
+```javascript
+/* globals $ */
+/* eslint-env node, dirigible */
+
+var mail = require('api/mail');
+
+var from = "dirigiblelabs@eclipse.org";
+var to = "example@gmail.com";
+var subject = "Subject";
+var content = "Content";
+
+mail.sendMail(from, to, subject, content);
+
+$.getResponse().getWriter().println("Mail sent");
+$.getResponse().getWriter().flush();
+$.getResponse().getWriter().close();
+```
