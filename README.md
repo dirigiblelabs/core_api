@@ -160,3 +160,22 @@ response.getWriter().println(uuid.randomUUID());
 response.getWriter().flush();
 response.getWriter().close();
 ```
+
+# Console API
+- Module **('api/console')**
+- Example usage:
+
+```javascript
+/* globals $ */
+/* eslint-env node, dirigible */
+
+var consoleApi = require('api/console');
+var service = require('api/service');
+var response = service.getResponse();
+
+consoleApi.getConsole().println("Hello Console World!");
+
+response.getWriter().println("Done.");
+response.getWriter().flush();
+response.getWriter().close();
+```
