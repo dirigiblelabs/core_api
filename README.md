@@ -99,20 +99,23 @@ response.getWriter().close();
 /* eslint-env node, dirigible */
 
 var http = require('api/http');
+var service = require('api/service');
+
+var response = service.getResponse();
 
 var options = {
-	hostname: 'http://services.odata.org',
-  	path: '/V4/Northwind/Northwind.svc/'
+    hostname: 'http://services.odata.org',
+    path: '/V4/Northwind/Northwind.svc/'
 };
 
-var response = http.request(options);
+var httpResponse = http.request(options);
+// var httpResponse = http.get('https://nodejs.org/api/http.html')
 
-//var response = http.get('https://nodejs.org/api/http.html')
 
-$.getResponse().getWriter().println(response.statusMessage);
-$.getResponse().getWriter().println(new java.lang.String(response.data));
-$.getResponse().getWriter().flush();
-$.getResponse().getWriter().close();
+response.getWriter().println(httpResponse.statusMessage);
+response.getWriter().println(new java.lang.String(httpResponse.data));
+response.getWriter().flush();
+response.getWriter().close();
 ```
 
 # Mail API
@@ -124,6 +127,8 @@ $.getResponse().getWriter().close();
 /* eslint-env node, dirigible */
 
 var mail = require('api/mail');
+var service = require('api/service');
+var response = service.getResponse();
 
 var from = "dirigiblelabs@eclipse.org";
 var to = "example@gmail.com";
@@ -132,7 +137,7 @@ var content = "Content";
 
 mail.sendMail(from, to, subject, content);
 
-$.getResponse().getWriter().println("Mail sent");
-$.getResponse().getWriter().flush();
-$.getResponse().getWriter().close();
+response.getWriter().println("Mail sent");
+response.getWriter().flush();
+response.getWriter().close();
 ```
