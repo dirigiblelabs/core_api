@@ -1,4 +1,4 @@
-# Service API - Response
+# Service API
 
 - Module **('api/service')**
 - **Response** example usage:
@@ -138,6 +138,25 @@ var content = "Content";
 mail.sendMail(from, to, subject, content);
 
 response.getWriter().println("Mail sent");
+response.getWriter().flush();
+response.getWriter().close();
+```
+
+# Utils API
+- Module **('api/utils')**
+- **UUID** example usage:
+
+```javascript
+/* globals $ */
+/* eslint-env node, dirigible */
+
+var utils = require('api/utils');
+var service = require('api/service');
+var response = service.getResponse();
+
+var uuid = utils.getUuidUtils();
+
+response.getWriter().println(uuid.randomUUID());
 response.getWriter().flush();
 response.getWriter().close();
 ```
