@@ -201,3 +201,28 @@ response.getWriter().println(namedDatasources);
 response.getWriter().flush();
 response.getWriter().close();
 ```
+
+# Extensions API
+- Module **('api/extensions')**
+- Example usage:
+
+```javascript
+/* globals $ */
+/* eslint-env node, dirigible */
+
+var extensions = require('api/extensions');
+var service = require('api/service');
+var response = service.getResponse();
+
+var confluenceInput = "* Bullet1\n" +
+				 "* Bullet2\n" +
+				 "*Bold*\n" +
+				 "_Italic_";
+var wiki = extensions.getWiki();
+var htmlOutput = wiki.toHtml(confluenceInput);
+
+response.setContentType("text/html");
+response.getWriter().println(htmlOutput);
+response.getWriter().flush();
+response.getWriter().close();
+```
