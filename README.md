@@ -179,3 +179,25 @@ response.getWriter().println("Done.");
 response.getWriter().flush();
 response.getWriter().close();
 ```
+
+# Datasource API
+- Module **('api/datasource')**
+- Example usage:
+
+```javascript
+/* globals $ */
+/* eslint-env node, dirigible */
+
+var datasourceApi = require('api/datasource');
+var service = require('api/service');
+var response = service.getResponse();
+
+var datasource = datasourceApi.getDatasource();
+var namedDatasources = datasourceApi.getNamedDatasources();
+
+response.getWriter().println(datasource);
+response.getWriter().println(namedDatasources);
+
+response.getWriter().flush();
+response.getWriter().close();
+```
