@@ -226,3 +226,39 @@ response.getWriter().println(htmlOutput);
 response.getWriter().flush();
 response.getWriter().close();
 ```
+
+# Messaging API
+- Module **('api/messaging')**
+- Example usage:
+
+```javascript
+/* globals $ */
+/* eslint-env node, dirigible */
+
+var messaging = require('api/messaging');
+var service = require('api/service');
+var response = service.getResponse();
+
+var messageHub = messaging.getMessagingService();
+
+messageHub.registerClient("client1");
+messageHub.registerClient("client2");
+
+messageHub.registerTopic("topic1");
+messageHub.registerTopic("topic2");
+
+messageHub.subscribe("client1", "topic1");
+
+messageHub.send("client1", "topic1", "Subject on Topic 1 from Client 1", "Message from Client1");
+messageHub.send("client1", "topic2", "Subject on Topic 2 from Client 1", "Message from Client1");
+
+messageHub.route();
+var messages = messageHub.receive("client1");
+
+for(var i = 0; i < messages.size(); i ++) {
+	var message = messages.get(i);
+	response.getWriter().println(message.getSubject() + " -> " + message.getBody());
+}
+response.getWriter().flush();
+response.getWriter().close();
+```
