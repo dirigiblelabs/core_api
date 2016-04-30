@@ -1,4 +1,4 @@
-/* globals $ */
+/* globals $ java */
 /* eslint-env node, dirigible */
 
 exports.get = function(options) {
@@ -68,10 +68,7 @@ function getResponseData(httpResponse, options) {
     var data = $.getIOUtils().toByteArray(content);
 
     $.getHttpUtils().consume(entity);
-    if (options.binary) {
-    	return data;
-	} 
-	return new java.lang.String(data);
+    return options.binary ? data : new java.lang.String(data);
 }
 
 function getResponseHeaders(httpResponse) {
