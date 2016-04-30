@@ -1,27 +1,39 @@
 /* globals $ java */
 /* eslint-env node, dirigible */
 
-exports.get = function(options) {
-	return handleRequest(options, 'GET');
+exports.get = function(url, options) {
+	return handleRequest(url, 'GET', options);
 };
 
-exports.post = function(options) {
-	return handleRequest(options, 'POST');
+exports.post = function(url, options) {
+	return handleRequest(url, 'POST', options);
 };
 
-exports.put = function(options) {
-	return handleRequest(options, 'PUT');
+exports.put = function(url, options) {
+	return handleRequest(url, 'PUT', options);
 };
 
-exports.delete = function(options) {
-	return handleRequest(options, 'DELETE');
+exports.delete = function(url, options) {
+	return handleRequest(url, 'DELETE', options);
 };
 
-function handleRequest(options, method) {
-	var url = options.host + ":" + (options.port ? options.port : 80) + (options.path ? options.path : '/');
+exports.request = function(options) {
+	return handleRequest(null, options.method, options);
+};
 
+function handleRequest(url, method, options) {
+    if (url === null) {
+	    url = options.host + ":" + (options.port ? options.port : 80) + (options.path ? options.path : '/');
+    }
+    if (method === null) {
+        method = "GET";
+    }
+    
 	var request = createRequest(method, url);
-	addHeaders(request, options.headers);
+	if (options) {
+	    addHeaders(request, options.headers);
+    }
+
 
 	var httpClient = $.getHttpUtils().createHttpClient(true);
 	return createResponse(httpClient.execute(request), options);
@@ -68,7 +80,12 @@ function getResponseData(httpResponse, options) {
     var data = $.getIOUtils().toByteArray(content);
 
     $.getHttpUtils().consume(entity);
-    return options.binary ? data : new java.lang.String(data);
+    var isBinary = false;
+    if (options) {
+        isBinary = options.binary;
+    }
+
+    return isBinary ? data : new java.lang.String(data);
 }
 
 function getResponseHeaders(httpResponse) {
