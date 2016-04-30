@@ -1,22 +1,31 @@
 /* globals $ */
 /* eslint-env node, dirigible */
 
-exports.get = function(url) {
-    var request = createRequest('GET', url);
-    var httpClient = $.getHttpUtils().createHttpClient(true);
-
-    return createResponse(httpClient.execute(request));
+exports.get = function(options) {
+	return handleRequest(options, 'GET');
 };
 
-exports.request = function(options) {
-	var url = options.hostname + ":" + (options.port ? options.port : 80) + (options.path ? options.path : '/');
+exports.post = function(options) {
+	return handleRequest(options, 'POST');
+};
 
-	var request = createRequest(options.method, url);
+exports.put = function(options) {
+	return handleRequest(options, 'PUT');
+};
+
+exports.delete = function(options) {
+	return handleRequest(options, 'DELETE');
+};
+
+function handleRequest(options, method) {
+	var url = options.host + ":" + (options.port ? options.port : 80) + (options.path ? options.path : '/');
+
+	var request = createRequest(method, url);
 	addHeaders(request, options.headers);
 
 	var httpClient = $.getHttpUtils().createHttpClient(true);
-	return createResponse(httpClient.execute(request));
-};
+	return createResponse(httpClient.execute(request), options);
+}
 
 function createRequest(method, url) {
 	var request = null;
@@ -42,24 +51,27 @@ function addHeaders(httpRequest, headers) {
 	}
 }
 
-function createResponse(httpResponse) {
+function createResponse(httpResponse, options) {
 	return {
 		'statusCode': httpResponse.getStatusLine().getStatusCode(),
 		'statusMessage': httpResponse.getStatusLine().getReasonPhrase(),
-		'data': getResponseData(httpResponse),
+		'data': getResponseData(httpResponse, options),
 		'httpVersion': httpResponse.getProtocolVersion(),
 		'headers': getResponseHeaders(httpResponse)
 	};
 }
 
-function getResponseData(httpResponse) {
+function getResponseData(httpResponse, options) {
     var entity = httpResponse.getEntity();
     var content = entity.getContent();
 
-   var data = $.getIOUtils().toByteArray(content);
+    var data = $.getIOUtils().toByteArray(content);
 
-   $.getHttpUtils().consume(entity);
-    return data;
+    $.getHttpUtils().consume(entity);
+    if (options.binary) {
+    	return data;
+	} 
+	return new java.lang.String(data);
 }
 
 function getResponseHeaders(httpResponse) {
