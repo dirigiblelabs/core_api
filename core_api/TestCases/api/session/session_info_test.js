@@ -9,7 +9,6 @@ var info = {
 	"creationTime": new Date(session.getCreationTime()),
 	"lastAccessedTime": session.getLastAccessedTime(),
 	"maxInactiveInterval": session.getMaxInactiveInterval()
-	
 };
 
 session.setMaxInactiveInterval(5000);
