@@ -9,7 +9,7 @@ var datasource = db.getDataSource(); // default
 
 var connection = datasource.getConnection();
 try {
-    var statement = connection.prepareStatement("select * from DGB_FILES1 where FILE_PATH like ?");
+    var statement = connection.prepareStatement("select * from DGB_FILES where FILE_PATH like ?");
     var i = 0;
     statement.setString(++i, "%");
     var resultSet = statement.executeQuery();
