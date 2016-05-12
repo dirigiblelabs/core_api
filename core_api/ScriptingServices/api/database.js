@@ -170,8 +170,8 @@ function statementExecute() {
 }
 
 function statementExecuteQuery() {
-	var internalResultSet = this.internalStatement.executeQuery();
-	return new ResultSet(internalResultSet);
+	var internalResultset = this.internalStatement.executeQuery();
+	return new ResultSet(internalResultset);
 }
 
 function statementExecuteUpdate() {
@@ -221,27 +221,104 @@ function statementSetTimestamp(index, value) {
 /**
  * ResultSet object
  */
-function ResultSet(internalResultSet) {
-	this.internalResultSet = internalResultSet;
-	this.next = resultSetNext;
-	this.getInt = resultSetGetInt;
-	this.getString = resultSetGetString;
-	this.close = resultSetClose;
+function ResultSet(internalResultset) {
+	this.internalResultset = internalResultset;
+	this.getInternalObject = resultsetGetInternalObject;
+	this.close = resultsetClose;
+	// getBigDecimal
+	// getBlob
+	this.getBoolean = resultsetGetBoolean;
+	// getByte
+	// getBytes
+	// getClob
+	this.getDate = resultsetGetDate;
+	this.getDouble = resultsetGetDouble;
+	this.getFloat = resultsetGetFloat;
+	this.getInt = resultsetGetInt;
+	this.getLong = resultsetGetLong;
+	this.getShort = resultsetGetShort;
+	this.getString = resultsetGetString;
+	this.getTime = resultsetGetTime;
+	this.getTimestamp = resultsetGetTimestamp;
+	this.isAfterLast = resultsetIsAfterLast;
+	this.isBeforeFirst = resultsetIsBeforeFirst;
+	this.isClosed = resultsetIsClosed;
+	this.isFirst = resultsetIsFirst;
+	this.isLast = resultsetIsLast;
+	this.next = resultsetNext;
 }
 
-function resultSetNext() {
-	return this.internalResultSet.next();
+function resultsetGetInternalObject() {
+	return this.internalResultset;
 }
 
-function resultSetGetInt(identifier) {
-	return this.internalResultSet.getInt(identifier);
+function resultsetClose() {
+	this.internalResultset.close();
 }
 
-function resultSetGetString(identifier) {
-	return this.internalResultSet.getString(identifier);
+function resultsetGetBoolean(identifier) {
+	return this.internalResultset.getBoolean(identifier);
 }
 
-function resultSetClose() {
-	this.internalResultSet.close();
+function resultsetGetDate(identifier) {
+	return new Date(this.internalResultset.getDate(identifier).getTime());
 }
+
+function resultsetGetDouble(identifier) {
+	return this.internalResultset.getDouble(identifier);
+}
+
+function resultsetGetFloat(identifier) {
+	return this.internalResultset.getFloat(identifier);
+}
+
+function resultsetGetInt(identifier) {
+	return this.internalResultset.getInt(identifier);
+}
+
+function resultsetGetLong(identifier) {
+	return this.internalResultset.getLong(identifier);
+}
+
+function resultsetGetShort(identifier) {
+	return this.internalResultset.getShort(identifier);
+}
+
+function resultsetGetString(identifier) {
+	return this.internalResultset.getString(identifier);
+}
+
+function resultsetGetTime(identifier) {
+	return new Date(this.internalResultset.getTime(identifier).getTime());
+}
+
+function resultsetGetTimestamp(identifier) {
+	return new Date(this.internalResultset.getTimestamp(identifier).getTime());
+}
+
+function resultsetIsAfterLast(identifier) {
+	return this.internalResultset.isAfterLast(identifier);
+}
+
+function resultsetIsBeforeFirst(identifier) {
+	return this.internalResultset.isBeforeFirst(identifier);
+}
+
+function resultsetIsClosed(identifier) {
+	return this.internalResultset.isClosed(identifier);
+}
+
+function resultsetIsFirst(identifier) {
+	return this.internalResultset.isFirst(identifier);
+}
+
+function resultsetIsLast(identifier) {
+	return this.internalResultset.isLast(identifier);
+}
+
+function resultsetNext() {
+	return this.internalResultset.next();
+}
+
+
 
