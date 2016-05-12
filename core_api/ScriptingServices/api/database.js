@@ -2,43 +2,127 @@
 /* eslint-env node, dirigible */
 
 exports.getDataSource = function() {
-	var javaDataSource = $.getDatasource();
-	return new DataSource(javaDataSource);
+	var internalDataSource = $.getDatasource();
+	return new DataSource(internalDataSource);
 };
 
 exports.getNamedDataSource = function(name) {
-	var javaDataSource = $.getNamedDatasource(name);
-	return new DataSource(javaDataSource);
+	var internalDataSource = $.getNamedDatasource(name);
+	return new DataSource(internalDataSource);
 };
 
 
-function DataSource(javaDataSource) {
-	this.javaDataSource = javaDataSource;
+/**
+ * DataSource object
+ */
+function DataSource(internalDataSource) {
+	this.internalDataSource = internalDataSource;
 	this.getConnection = getConnection;
 }
 
 function getConnection() {
-	var javaConnection = this.javaDataSource.getConnection();
-	return new Connection(javaConnection);
+	var internalConnection = this.internalDataSource.getConnection();
+	return new Connection(internalConnection);
 }
 
-function Connection(javaConnection) {
-	this.javaConnection = javaConnection;
+/**
+ * Connection object
+ */
+function Connection(internalConnection) {
+	this.internalConnection = internalConnection;
 	this.prepareStatement = prepareStatement;
 	this.close = connectionClose;
+	this.commit = connectionCommit;
+	this.getAutoCommit = connectionGetAutoCommit;
+	this.getCatalog = connectionGetCatalog;
+	// getClientInfo
+	// getMetaData
+	this.getSchema = connectionGetSchema;
+	this.getTransactionIsolation = connectionGetTransactionIsolation;
+	this.isClosed = connectionIsClosed;
+	this.isReadOnly = connectionIsReadOnly;
+	this.isValid = connectionIsValid;
+	// prepareCall
+	this.rollback = connectionRollback;
+	this.setAutoCommit = connectionSetAutoCommit;
+	this.setCatalog = connectionSetCatalog;
+	// setClientInfo
+	this.setReadOnly = connectionSetReadOnly;
+	this.setSchema = connectionSetSchema;
+	this.setTransactionIsolation = connectionSetTransactionIsolation;
 }
 
 function prepareStatement(sql) {
-	var javaStatement = this.javaConnection.prepareStatement(sql);
-	return new Statement(javaStatement);
+	var internalStatement = this.internalConnection.prepareStatement(sql);
+	return new Statement(internalStatement);
 }
 
 function connectionClose() {
-	this.javaConnection.close();
+	this.internalConnection.close();
 }
 
-function Statement(javaStatement) {
-	this.javaStatement = javaStatement;
+function connectionCommit() {
+	this.internalConnection.commit();
+}
+
+function connectionGetAutoCommit() {
+	return this.internalConnection.getAutoCommit();
+}
+
+function connectionGetCatalog() {
+	return this.internalConnection.getCatalog();
+}
+
+function connectionGetSchema() {
+	return this.internalConnection.getSchema();
+}
+
+function connectionGetTransactionIsolation() {
+	return this.internalConnection.getTransactionIsolation();
+}
+
+function connectionIsClosed() {
+	return this.internalConnection.isClosed();
+}
+
+function connectionIsReadOnly() {
+	return this.internalConnection.isReadOnly();
+}
+
+function connectionIsValid() {
+	return this.internalConnection.isValid();
+}
+
+function connectionRollback() {
+	this.internalConnection.rollback();
+}
+
+function connectionSetAutoCommit(autoCommit) {
+	this.internalConnection.setAutoCommit(autoCommit);
+}
+
+function connectionSetCatalog(catalog) {
+	this.internalConnection.setCatalog(catalog);
+}
+
+function connectionSetReadOnly(readOnly) {
+	this.internalConnection.setReadOnly(readOnly);
+}
+
+function connectionSetSchema(schema) {
+	this.internalConnection.setSchema(schema);
+}
+
+function connectionSetTransactionIsolation(transactionIsolation) {
+	this.internalConnection.setTransactionIsolation(transactionIsolation);
+}
+
+
+/**
+ * Statement object
+ */
+function Statement(internalStatement) {
+	this.internalStatement = internalStatement;
 	this.setInt = statementSetInt;
 	this.setString = statementSetString;
 	this.executeQuery = statementExecuteQuery;
@@ -46,25 +130,25 @@ function Statement(javaStatement) {
 }
 
 function statementSetInt(index, value) {
-	this.javaStatement.setInt(index, value);
+	this.internalStatement.setInt(index, value);
 }
 
 function statementSetString(index, value) {
-	this.javaStatement.setString(index, value);
+	this.internalStatement.setString(index, value);
 }
 
 function statementExecuteQuery() {
-	var javaResultSet = this.javaStatement.executeQuery();
-	return new ResultSet(javaResultSet);
+	var internalResultSet = this.internalStatement.executeQuery();
+	return new ResultSet(internalResultSet);
 }
 
 function statementClose() {
-	this.javaStatement.close();
+	this.internalStatement.close();
 }
 
 
-function ResultSet(javaResultSet) {
-	this.javaResultSet = javaResultSet;
+function ResultSet(internalResultSet) {
+	this.internalResultSet = internalResultSet;
 	this.next = resultSetNext;
 	this.getInt = resultSetGetInt;
 	this.getString = resultSetGetString;
@@ -72,18 +156,18 @@ function ResultSet(javaResultSet) {
 }
 
 function resultSetNext() {
-	return this.javaResultSet.next();
+	return this.internalResultSet.next();
 }
 
 function resultSetGetInt(identifier) {
-	return this.javaResultSet.getInt(identifier);
+	return this.internalResultSet.getInt(identifier);
 }
 
 function resultSetGetString(identifier) {
-	return this.javaResultSet.getString(identifier);
+	return this.internalResultSet.getString(identifier);
 }
 
 function resultSetClose() {
-	this.javaResultSet.close();
+	this.internalResultSet.close();
 }
 
