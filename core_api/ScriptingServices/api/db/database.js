@@ -1,32 +1,32 @@
 /* globals $ java */
 /* eslint-env node, dirigible */
 
-exports.getDataSource = function() {
-	var internalDataSource = $.getDatasource();
-	return new DataSource(internalDataSource);
+exports.getDatasource = function() {
+	var internalDatasource = $.getDatasource();
+	return new Datasource(internalDatasource);
 };
 
-exports.getNamedDataSource = function(name) {
-	var internalDataSource = $.getNamedDatasource(name);
-	return new DataSource(internalDataSource);
+exports.getNamedDatasource = function(name) {
+	var internalDatasource = $.getNamedDatasource(name);
+	return new Datasource(internalDatasource);
 };
 
 
 /**
- * DataSource object
+ * Datasource object
  */
-function DataSource(internalDataSource) {
-	this.internalDataSource = internalDataSource;
+function Datasource(internalDatasource) {
+	this.internalDatasource = internalDatasource;
 	this.getInternalObject = datasourceGetInternalObject;
 	this.getConnection = datasourceGetConnection;
 }
 
 function datasourceGetInternalObject() {
-	return this.internalDataSource;
+	return this.internalDatasource;
 }
 
 function datasourceGetConnection() {
-	var internalConnection = this.internalDataSource.getConnection();
+	var internalConnection = this.internalDatasource.getConnection();
 	return new Connection(internalConnection);
 }
 

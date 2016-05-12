@@ -1,11 +1,11 @@
-/* globals $ /
-/ eslint-env node, dirigible */
+/* globals $ */
+/* eslint-env node, dirigible */
 
-var db = require('api/database');
+var database = require('api/db/database');
 var response = require('api/response');
 
-var datasource = db.getDataSource(); // default
-//var datasource = db.getNamedDataSource("name-of-the-datasource");
+var datasource = database.getDatasource(); // default
+//var datasource = db.getNamedDatasource("name-of-the-datasource");
 
 var connection = datasource.getConnection();
 try {
