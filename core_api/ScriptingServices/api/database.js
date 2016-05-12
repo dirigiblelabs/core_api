@@ -1,4 +1,4 @@
-/* globals $ */
+/* globals $ java */
 /* eslint-env node, dirigible */
 
 exports.getDataSource = function() {
@@ -17,10 +17,15 @@ exports.getNamedDataSource = function(name) {
  */
 function DataSource(internalDataSource) {
 	this.internalDataSource = internalDataSource;
-	this.getConnection = getConnection;
+	this.getInternalObject = datasourceGetInternalObject;
+	this.getConnection = datasourceGetConnection;
 }
 
-function getConnection() {
+function datasourceGetInternalObject() {
+	return this.internalDataSource;
+}
+
+function datasourceGetConnection() {
 	var internalConnection = this.internalDataSource.getConnection();
 	return new Connection(internalConnection);
 }
@@ -30,6 +35,7 @@ function getConnection() {
  */
 function Connection(internalConnection) {
 	this.internalConnection = internalConnection;
+	this.getInternalObject = connectionGetInternalObject;
 	this.prepareStatement = prepareStatement;
 	this.close = connectionClose;
 	this.commit = connectionCommit;
@@ -50,6 +56,10 @@ function Connection(internalConnection) {
 	this.setReadOnly = connectionSetReadOnly;
 	this.setSchema = connectionSetSchema;
 	this.setTransactionIsolation = connectionSetTransactionIsolation;
+}
+
+function connectionGetInternalObject() {
+	return this.internalConnection;
 }
 
 function prepareStatement(sql) {
@@ -123,18 +133,40 @@ function connectionSetTransactionIsolation(transactionIsolation) {
  */
 function Statement(internalStatement) {
 	this.internalStatement = internalStatement;
-	this.setInt = statementSetInt;
-	this.setString = statementSetString;
-	this.executeQuery = statementExecuteQuery;
+	this.getInternalObject = statementGetInternalObject;
 	this.close = statementClose;
+	
+	this.execute = statementExecute;
+	this.executeQuery = statementExecuteQuery;
+	this.executeUpdate = statementExecuteUpdate;
+	// getMetaData
+	// setBigDecimal
+	// setBlob
+	this.setBoolean = statementSetBoolean;
+	// setByte
+	// setBytes
+	// setClob
+	this.setDate = statementSetDate;
+	this.setDouble = statementSetDouble;
+	this.setFloat = statementSetFloat;
+	this.setInt = statementSetInt;
+	this.setLong = statementSetLong;
+	this.setShort = statementSetShort;
+	this.setString = statementSetString;
+	this.setTime = statementSetTime;
+	this.setTimestamp = statementSetTimestamp;
 }
 
-function statementSetInt(index, value) {
-	this.internalStatement.setInt(index, value);
+function statementGetInternalObject() {
+	return this.internalStatement;
 }
 
-function statementSetString(index, value) {
-	this.internalStatement.setString(index, value);
+function statementClose() {
+	this.internalStatement.close();
+}
+
+function statementExecute() {
+	return this.internalStatement.execute();
 }
 
 function statementExecuteQuery() {
@@ -142,11 +174,53 @@ function statementExecuteQuery() {
 	return new ResultSet(internalResultSet);
 }
 
-function statementClose() {
-	this.internalStatement.close();
+function statementExecuteUpdate() {
+	return this.internalStatement.executeUpdate();
 }
 
+function statementSetBoolean(index, value) {
+	this.internalStatement.setBoolean(index, value);
+}
 
+function statementSetDate(index, value) {
+	this.internalStatement.setDate(index, new java.util.Date(value.getTime()));
+}
+
+function statementSetDouble(index, value) {
+	this.internalStatement.setDouble(index, value);
+}
+
+function statementSetFloat(index, value) {
+	this.internalStatement.setFloat(index, value);
+}
+
+function statementSetInt(index, value) {
+	this.internalStatement.setInt(index, value);
+}
+
+function statementSetLong(index, value) {
+	this.internalStatement.setLong(index, value);
+}
+
+function statementSetShort(index, value) {
+	this.internalStatement.setShort(index, value);
+}
+
+function statementSetString(index, value) {
+	this.internalStatement.setString(index, value);
+}
+
+function statementSetTime(index, value) {
+	this.internalStatement.setTime(index, new java.util.Time(value.getTime()));
+}
+
+function statementSetTimestamp(index, value) {
+	this.internalStatement.setTimestamp(index, new java.util.Timestamp(value.getTime()));
+}
+
+/**
+ * ResultSet object
+ */
 function ResultSet(internalResultSet) {
 	this.internalResultSet = internalResultSet;
 	this.next = resultSetNext;
