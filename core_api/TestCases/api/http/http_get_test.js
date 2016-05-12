@@ -1,8 +1,8 @@
 /* globals $ */
 /* eslint-env node, dirigible */
 
-var http = require('api/http');
-var response = require('api/response');
+var http = require('api/http/client');
+var response = require('api/http/response');
 
 var httpResponse = http.get('http://services.odata.org/V4/Northwind/Northwind.svc/');
 

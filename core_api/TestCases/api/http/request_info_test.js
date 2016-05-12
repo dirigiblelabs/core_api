@@ -1,8 +1,8 @@
 /* globals $ */
 /* eslint-env node, dirigible */
 
-var response = require('api/response');
-var request = require('api/request');
+var response = require('api/http/response');
+var request = require('api/http/request');
 
 var info = request.getInfo();
 
