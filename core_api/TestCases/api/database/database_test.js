@@ -1,8 +1,8 @@
 /* globals $ */
 /* eslint-env node, dirigible */
 
-var database = require('api/db/database');
-var response = require('api/response');
+var database = require('api/database');
+var response = require('api/http/response');
 
 var datasource = database.getDatasource(); // default
 //var datasource = db.getNamedDatasource("name-of-the-datasource");
