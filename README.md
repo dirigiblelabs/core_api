@@ -1,122 +1,139 @@
-# Service API
-
-- Module **('api/service')**
-- **Response** example usage:
+# Database API
+- Module: **('api/db/database')**
+- Issue: https://github.com/dirigiblelabs/core_api/issues/9
+- Example:
 
 ```javascript
 /* globals $ */
 /* eslint-env node, dirigible */
 
-var service = require('api/service');
+var database = require('api/db/database');
+var response = require('api/response');
 
-var response = service.getResponse();
+var datasource = database.getDatasource(); // default
+//var datasource = db.getNamedDatasource("name-of-the-datasource");
 
-response.getWriter().println("Hello World!");
-response.getWriter().flush();
-response.getWriter().close();
+var connection = datasource.getConnection();
+try {
+    var statement = connection.prepareStatement("select * from DGB_FILES where FILE_PATH like ?");
+    var i = 0;
+    statement.setString(++i, "%");
+    var resultSet = statement.executeQuery();
+    while (resultSet.next()) {
+        response.println("[path]: " + resultSet.getString("FILE_PATH"));
+    }
+    resultSet.close();
+    statement.close();
+} catch(e) {
+    console.trace(e);
+    response.println(e.message);
+} finally {
+    connection.close();
+}
+
+response.flush();
+response.close();
 ```
-- **Request** example usage:
+
+# HTTP API
+## Response API
+
+- Module **('api/http/response')**
+- Issue: https://github.com/dirigiblelabs/core_api/issues/1
+- Example:
 
 ```javascript
 /* globals $ */
 /* eslint-env node, dirigible */
 
-var service = require('api/service');
+var response = require('api/http/response');
 
-var request = service.getRequest();
-var response = service.getResponse();
-
-var name = request.getParameter("name");
-
-response.getWriter().println("Hello " + name + "!");
-response.getWriter().flush();
-response.getWriter().close();
+response.println("Hello World!");
+response.flush();
+response.close();
 ```
-- **User Name** example usage:
+
+## Request API
+- Module **('api/http/request')**
+- Issue: https://github.com/dirigiblelabs/core_api/issues/4
+- Example:
 
 ```javascript
 /* globals $ */
 /* eslint-env node, dirigible */
 
-var service = require('api/service');
+var request = require('api/http/request');
+var response = require('api/http/response');
 
-var response = service.getResponse();
-var userName = service.getUserName();
+var method = request.getMethod();
 
-response.getWriter().println("Hello " + userName + "!");
-response.getWriter().flush();
-response.getWriter().close();
+response.println("[Method]: " + method);
+response.flush();
+response.close();
 ```
-- **Session** example usage:
+## Session API
+- Module **('api/http/session')**
+- Issue: https://github.com/dirigiblelabs/core_api/issues/5
+- Example:
 
 ```javascript
 /* globals $ */
 /* eslint-env node, dirigible */
 
-var service = require('api/service');
+var session = require('api/http/session');
+var response = require('api/http/response');
 
-var response = service.getResponse();
-var session = service.getSession();
-
-response.getWriter().println("SessionId: " + session.getId());
+response.println("SessionId: " + session.getId());
 
 var attributeNames = session.getAttributeNames();
 while(attributeNames.hasMoreElements()) {
 	var attributeName = attributeNames.nextElement();
 	var value = session.getAttribute(attributeName);
-	response.getWriter().println(attributeName + "=" + value);
+	response.println(attributeName + "=" + value);
 }
 
-response.getWriter().flush();
-response.getWriter().close();
+response.flush();
+response.close();
 ```
-- **Context** example usage:
+
+## HTTP Client API 
+- Module **('api/http/client')**
+- Issue: https://github.com/dirigiblelabs/core_api/issues/3
+- Example:
 
 ```javascript
 /* globals $ */
 /* eslint-env node, dirigible */
 
-var service = require('api/service');
-
-var response = service.getResponse();
-var context = service.getContext();
-
-context.put("key", "value");
-
-response.getWriter().println(context.get("key"));
-response.getWriter().println(context);
-response.getWriter().flush();
-response.getWriter().close();
-```
-
-# HTTP API 
-
-- Module **('api/http')**
-- Example usage:
-
-```javascript
-/* globals $ */
-/* eslint-env node, dirigible */
-
-var http = require('api/http');
-var service = require('api/service');
-
-var response = service.getResponse();
+var http = require('api/http/client');
+var response = require('api/http/response');
 
 var options = {
-    hostname: 'http://services.odata.org',
-    path: '/V4/Northwind/Northwind.svc/'
+    method: 'GET', // default
+    host: 'http://services.odata.org',
+    port: 80,
+    path: '/V4/Northwind/Northwind.svc/',
+    binary: false 
 };
 
 var httpResponse = http.request(options);
-// var httpResponse = http.get('https://nodejs.org/api/http.html')
 
-
-response.getWriter().println(httpResponse.statusMessage);
-response.getWriter().println(new java.lang.String(httpResponse.data));
-response.getWriter().flush();
-response.getWriter().close();
+response.println(httpResponse.statusMessage);
+response.println(httpResponse.data);
+response.flush();
+response.close();
 ```
+
+
+
+
+
+
+
+---------------
+
+
+
 
 # Mail API
 - Module **('api/mail')**
