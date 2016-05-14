@@ -12,10 +12,16 @@
 /* eslint-env node, dirigible */
 
 exports.print = function(input) {
+	if (input === undefined) {
+		input = "";
+	}
 	return $.getResponse().getWriter().print(input + "");
 };
 
 exports.println = function(input) {
+	if (input === undefined) {
+		input = "";
+	}
 	return $.getResponse().getWriter().println(input + "");
 };
 
