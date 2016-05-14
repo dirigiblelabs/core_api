@@ -198,10 +198,8 @@ var response = require('api/http/response');
 
 raw = "John's bag";
 escaped = xss.escapeSql(raw);
-response.println();
-response.println("SQL");
-response.println(raw);
-response.println(escaped);
+response.println(raw); // John's bag
+response.println(escaped); // John''s bag
 
 response.flush();
 response.close();
