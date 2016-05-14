@@ -8,7 +8,7 @@
  * SAP - initial API and implementation
  *******************************************************************************/
 
-/* globals $ java */
+/* globals $ java org */
 /* eslint-env node, dirigible */
 
 exports.getDatasource = function() {
@@ -21,14 +21,15 @@ exports.getNamedDatasource = function(name) {
 	return new Datasource(internalDatasource);
 };
 
-
 /**
  * Datasource object
  */
 function Datasource(internalDatasource) {
 	this.internalDatasource = internalDatasource;
+	this.internalDbUtils = $.getDatabaseUtils(this.internalDatasource);
 	this.getInternalObject = datasourceGetInternalObject;
 	this.getConnection = datasourceGetConnection;
+	this.getSequence = datasourceGetSequence;
 }
 
 function datasourceGetInternalObject() {
@@ -38,6 +39,10 @@ function datasourceGetInternalObject() {
 function datasourceGetConnection() {
 	var internalConnection = this.internalDatasource.getConnection();
 	return new Connection(internalConnection);
+}
+
+function datasourceGetSequence(name) {
+	return new Sequence(this.internalDbUtils, name);
 }
 
 /**
@@ -331,4 +336,51 @@ function resultsetNext() {
 }
 
 
+/**
+ * Sequence object
+ */
+function Sequence(internalDbUtils, name) {
+	this.internalDbUtils = internalDbUtils;
+	this.getInternalObject = sequenceGetInternalObject;
+	this.name = name;
+	this.getName = sequenceGetName;
+	this.create = sequenceCreateSequence;
+	this.next = sequenceNextSequence;
+	this.drop = sequenceDropSequence;
+	this.exists = sequenceExistsSequence;
+//	this.createLimitAndOffset = dbutilsCreateLimitAndOffset;
+//	this.createTopAndStart = dbutilsCreateTopAndStart;
+}
+
+function sequenceGetInternalObject() {
+	return this.internalDbUtils;
+}
+
+function sequenceGetName() {
+	return this.name;
+}
+
+function sequenceCreateSequence(start) {
+	return this.internalDbUtils.createSequence(this.name, start);
+}
+
+function sequenceNextSequence() {
+	return this.internalDbUtils.getNext(this.name);
+}
+
+function sequenceDropSequence() {
+	return this.internalDbUtils.dropSequence(this.name);
+}
+
+function sequenceExistsSequence() {
+	return this.internalDbUtils.existSequence(this.name);
+}
+
+//function dbutilsCreateLimitAndOffset(limit, offset) {
+//	return this.internalDbUtils.createLimitAndOffset(limit, offset);
+//}
+//
+//function dbutilsCreateTopAndStart(limit, offset) {
+//	return this.internalDbUtils.createTopAndStart(limit, offset);
+//}
 
