@@ -182,45 +182,47 @@ response.flush();
 response.close();
 ```
 
----------------
-
 # Utils API
-- Module **('api/utils')**
-- **UUID** example usage:
+
+## XSS API
+- Module **('api/utils/xss')**
+- Issue: https://github.com/dirigiblelabs/core_api/issues/12
+- Example:
 
 ```javascript
 /* globals $ */
 /* eslint-env node, dirigible */
 
-var utils = require('api/utils');
-var service = require('api/service');
-var response = service.getResponse();
+var xss = require('api/utils/xss');
+var response = require('api/http/response');
 
-var uuid = utils.getUuidUtils();
+raw = "John's bag";
+escaped = xss.escapeSql(raw);
+response.println(raw); // John's bag
+response.println(escaped); // John''s bag
 
-response.getWriter().println(uuid.randomUUID());
-response.getWriter().flush();
-response.getWriter().close();
+response.flush();
+response.close();
 ```
 
 # Console API
-- Module **('api/console')**
-- Example usage:
+- Module **built-in**
+- Issue: https://github.com/dirigiblelabs/core_api/issues/2
+- Example:
 
 ```javascript
-/* globals $ */
-/* eslint-env node, dirigible */
+/* globals $ /
+/ eslint-env node, dirigible */
 
-var consoleApi = require('api/console');
-var service = require('api/service');
-var response = service.getResponse();
-
-consoleApi.getConsole().println("Hello Console World!");
-
-response.getWriter().println("Done.");
-response.getWriter().flush();
-response.getWriter().close();
+console.info("Info message: %s", "Hello World!");
+console.error("Error message.");
+console.warn("Warning message.");
+console.log("Log message.");
+console.trace("Trace.");
 ```
+
+-----------
+
 
 # Extensions API
 - Module **('api/extensions')**
