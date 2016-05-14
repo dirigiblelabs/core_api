@@ -2,11 +2,11 @@
 /* eslint-env node, dirigible */
 
 exports.print = function(input) {
-	return $.getResponse().getWriter().print(input);
+	return $.getResponse().getWriter().print(input + "");
 };
 
 exports.println = function(input) {
-	return $.getResponse().getWriter().println(input);
+	return $.getResponse().getWriter().println(input + "");
 };
 
 exports.flush = function(input) {

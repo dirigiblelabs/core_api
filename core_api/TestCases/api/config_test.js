@@ -9,11 +9,12 @@ var properties = {
 		"property2": "value2"
 	}
 
-config.set("/path/to/property", "single_value1");
-config.set("/path/to/properties", JSON.stringify(properties));
+config.set("/path/to/property", "key1", "value1");
+config.setJson("/path/to/properties", JSON.stringify(properties));
 
-response.println(config.get("/path/to/property"));
-response.println(config.get("/path/to/properties"));
+response.println(config.get("/path/to/property", "key1"));
+var result = JSON.parse(config.getJson("/path/to/properties"));
+response.println(result.property2);
 
 config.delete("/path/to/property");
 config.delete("/path/to/properties");
