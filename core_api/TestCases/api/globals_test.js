@@ -1,7 +1,7 @@
 /* globals $ */
 /* eslint-env node, dirigible */
 
-var response = require('api/response');
+var response = require('api/http/response');
 var globals = require('api/globals');
 
 globals.set("attr1", "value1");
