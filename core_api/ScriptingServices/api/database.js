@@ -30,6 +30,7 @@ function Datasource(internalDatasource) {
 	this.getInternalObject = datasourceGetInternalObject;
 	this.getConnection = datasourceGetConnection;
 	this.getSequence = datasourceGetSequence;
+	this.getPaging = datasourceGetPaging;
 }
 
 function datasourceGetInternalObject() {
@@ -43,6 +44,10 @@ function datasourceGetConnection() {
 
 function datasourceGetSequence(name) {
 	return new Sequence(this.internalDbUtils, name);
+}
+
+function datasourceGetPaging() {
+	return new Paging(this.internalDbUtils);
 }
 
 /**
@@ -376,11 +381,24 @@ function sequenceExistsSequence() {
 	return this.internalDbUtils.existSequence(this.name);
 }
 
-//function dbutilsCreateLimitAndOffset(limit, offset) {
-//	return this.internalDbUtils.createLimitAndOffset(limit, offset);
-//}
-//
-//function dbutilsCreateTopAndStart(limit, offset) {
-//	return this.internalDbUtils.createTopAndStart(limit, offset);
-//}
+/**
+ * Paging object
+ */
+function Paging(internalDbUtils) {
+	this.internalDbUtils = internalDbUtils;
+	this.getInternalObject = pagingGetInternalObject;
+	this.genLimitAndOffset = pagingCreateLimitAndOffset;
+	this.genTopAndStart = pagingCreateTopAndStart;
+}
 
+function pagingGetInternalObject() {
+	return this.internalDbUtils;
+}
+
+function pagingCreateLimitAndOffset(limit, offset) {
+	return this.internalDbUtils.createLimitAndOffset(limit, offset);
+}
+
+function pagingCreateTopAndStart(limit, offset) {
+	return this.internalDbUtils.createTopAndStart(limit, offset);
+}
