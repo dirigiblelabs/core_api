@@ -158,40 +158,31 @@ response.flush();
 response.close();
 ```
 
-
-
-
-
-
-
----------------
-
-
-
-
 # Mail API
 - Module **('api/mail')**
-- Example usage:
+- Issue: https://github.com/dirigiblelabs/core_api/issues/12
+- Example:
 
 ```javascript
 /* globals $ */
 /* eslint-env node, dirigible */
 
 var mail = require('api/mail');
-var service = require('api/service');
-var response = service.getResponse();
+var response = require('api/http/response');
 
 var from = "dirigiblelabs@eclipse.org";
 var to = "example@gmail.com";
 var subject = "Subject";
 var content = "Content";
 
-mail.sendMail(from, to, subject, content);
+mail.send(from, to, subject, content);
 
-response.getWriter().println("Mail sent");
-response.getWriter().flush();
-response.getWriter().close();
+response.println("Mail sent");
+response.flush();
+response.close();
 ```
+
+---------------
 
 # Utils API
 - Module **('api/utils')**
