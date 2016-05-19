@@ -12,9 +12,42 @@
 /* eslint-env node, dirigible */
 
 exports.getSession = function() {
-	return $.getExecutionContext().get("websocket-session");
+	var internalSession = $.getExecutionContext().get("websocket-session");
+	return new Session(internalSession);
 };
 
-exports.getSessions = function() {
+exports.getOpenSessions = function() {
 	return $.getExecutionContext().get("websocket-sessions");
 };
+
+/**
+ * Session object
+ */
+function Session(internalSession) {
+	this.internalSession = internalSession;
+	this.getInternalObject = sessionGetInternalObject;
+	this.sendText = sessionSendText;
+	this.sendTextAsync = sessionSendTextAsync;
+	this.getId = sessionGetId;
+	this.close = sessionClose;
+}
+
+function sessionGetInternalObject() {
+	return this.internalSession;
+}
+
+function sessionSendText(text) {
+	this.internalSession.getBasicRemote().sendText(text);	
+}
+
+function sessionSendTextAsync(text) {
+	this.internalSession.getAsyncRemote().sendText(text);	
+}
+
+function sessionGetId() {
+	this.internalSession.getId();	
+}
+
+function sessionClose() {
+	this.internalSession.close();	
+}
