@@ -18,6 +18,5 @@ response.println("[User Name]: " + env.getUserName());
 
 response.println("[All]: " + env.getAll());
 
-
 response.flush();
 response.close();
