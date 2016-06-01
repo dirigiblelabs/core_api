@@ -230,7 +230,7 @@ exports.read = function(path) {
 exports.write = function(path, bytes) {
 	var internalPath = java.nio.file.Paths.get(path);
 	var internalBytes = java.lang.reflect.Array.newInstance(java.lang.Byte.TYPE, bytes.length);
-	for (i=0; i<bytes.length; i++) {
+	for (var i=0; i<bytes.length; i++) {
 		internalBytes[i] = bytes[i];
 	}
 	java.nio.file.Files.write(internalPath, internalBytes);
