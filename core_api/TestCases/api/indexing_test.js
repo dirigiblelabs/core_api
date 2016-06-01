@@ -25,13 +25,13 @@ for (var i=0;i<results.length;i++) {
 
 results = index.search("1");
 for (var i=0;i<results.length;i++) {
-	var result = results[i];
+	result = results[i];
     response.println("[Found for '1']: " + result.id);
 }
 
 results = index.search("2");
 for (var i=0;i<results.length;i++) {
-	var result = results[i];
+	result = results[i];
     response.println("[Found for '2']: " + result.id);
 }
 
