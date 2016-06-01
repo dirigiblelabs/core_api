@@ -23,13 +23,13 @@ for (var i=0;i<results.length;i++) {
     response.println("[Found for 'cool']: " + result.id);    
 }
 
-var results = index.search("1");
+results = index.search("1");
 for (var i=0;i<results.length;i++) {
 	var result = results[i];
     response.println("[Found for '1']: " + result.id);
 }
 
-var results = index.search("2");
+results = index.search("2");
 for (var i=0;i<results.length;i++) {
 	var result = results[i];
     response.println("[Found for '2']: " + result.id);
