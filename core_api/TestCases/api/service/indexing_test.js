@@ -1,7 +1,7 @@
 /* globals $ */
 /* eslint-env node, dirigible */
 
-var indexing = require('api/indexing');
+var indexing = require('api/service/indexing');
 var response = require('api/http/response');
 
 var index = indexing.getIndex("myIndex");

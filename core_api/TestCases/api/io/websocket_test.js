@@ -1,7 +1,7 @@
 /* eslint-env node, dirigible */
 
 var globals = require("api/globals");
-var websocket = require("api/websocket");
+var websocket = require("api/io/websocket");
 var context = require("api/context");
 
 var websocketSession = websocket.getSession();

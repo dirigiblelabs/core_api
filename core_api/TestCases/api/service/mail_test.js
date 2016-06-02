@@ -1,7 +1,7 @@
 /* globals $ */
 /* eslint-env node, dirigible */
 
-var mail = require('api/mail');
+var mail = require('api/service/mail');
 var response = require('api/http/response');
 
 var from = "dirigiblelabs@eclipse.org";

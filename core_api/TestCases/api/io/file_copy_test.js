@@ -1,7 +1,7 @@
 /* globals $ */
 /* eslint-env node, dirigible */
 
-var files = require('api/files');
+var files = require('api/io/files');
 var response = require('api/http/response');
 
 files.createFile("../temp/test1/test2.txt");

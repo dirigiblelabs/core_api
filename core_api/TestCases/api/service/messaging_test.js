@@ -2,7 +2,7 @@
 /* eslint-env node, dirigible */
 
 var response = require('api/http/response');
-var messaging = require('api/messaging');
+var messaging = require('api/service/messaging');
 
 messaging.registerClient("client1");
 messaging.registerClient("client2");
