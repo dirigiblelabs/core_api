@@ -1,5 +1,5 @@
 # Database API
-- Module: **('api/database')**
+- Module: **('api/db/database')**
 - Issue: https://github.com/dirigiblelabs/core_api/issues/9
 - Example:
 
@@ -7,7 +7,7 @@
 /* globals $ */
 /* eslint-env node, dirigible */
 
-var database = require('api/database');
+var database = require('api/db/database');
 var response = require('api/http/response');
 
 var datasource = database.getDatasource(); // default
@@ -159,7 +159,7 @@ response.close();
 ```
 
 # Mail API
-- Module **('api/mail')**
+- Module **('api/service/mail')**
 - Issue: https://github.com/dirigiblelabs/core_api/issues/12
 - Example:
 
@@ -167,7 +167,7 @@ response.close();
 /* globals $ */
 /* eslint-env node, dirigible */
 
-var mail = require('api/mail');
+var mail = require('api/service/mail');
 var response = require('api/http/response');
 
 var from = "dirigiblelabs@eclipse.org";
@@ -257,7 +257,7 @@ response.close();
 
 
 # Files API
-- Module **('api/files')**
+- Module **('api/io/files')**
 - Issue: https://github.com/dirigiblelabs/core_api/issues/21
 - Example:
 
@@ -265,7 +265,7 @@ response.close();
 /* globals $ */
 /* eslint-env node, dirigible */
 
-var files = require('api/files');
+var files = require('api/io/files');
 var response = require('api/http/response');
 
 var file = files.get("../temp/./..");
@@ -285,32 +285,4 @@ response.flush();
 response.close();
 ```
 
-
------------
-
-
-# Extensions API
-- Module **('api/extensions')**
-- Example usage:
-
-```javascript
-/* globals $ */
-/* eslint-env node, dirigible */
-
-var extensions = require('api/extensions');
-var service = require('api/service');
-var response = service.getResponse();
-
-var confluenceInput = "* Bullet1\n" +
-				 "* Bullet2\n" +
-				 "*Bold*\n" +
-				 "_Italic_";
-var wiki = extensions.getWiki();
-var htmlOutput = wiki.toHtml(confluenceInput);
-
-response.setContentType("text/html");
-response.getWriter().println(htmlOutput);
-response.getWriter().flush();
-response.getWriter().close();
-```
-
+Fore more samples see the TestCases folder and the Issues for more details.
