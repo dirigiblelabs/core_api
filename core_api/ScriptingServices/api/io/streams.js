@@ -42,6 +42,20 @@ exports.writeText = function(outputStream, text) {
 };
 
 /**
+ * Copy the input stream content to an output stream
+ */
+exports.copy = function(inputStream, outputStream) {
+	$.IOUtils.copy(inputStream.getInternalObject(), outputStream.getInternalObject());
+};
+
+/**
+ * Copy the input stream large (>2GB) content to an output stream
+ */
+exports.copyLarge = function(inputStream, outputStream) {
+	$.IOUtils.copyLarge(inputStream.getInternalObject(), outputStream.getInternalObject());
+};
+
+/**
  * InputStream object. To be used internally by the API layer
  */
 exports.InputStream = function(internalInputStream) {
