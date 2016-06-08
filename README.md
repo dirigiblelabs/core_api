@@ -1,5 +1,5 @@
 # Database API
-- Module: **('api/db/database')**
+- Module: **('db/database')**
 - Issue: https://github.com/dirigiblelabs/core_api/issues/9
 - Example:
 
@@ -7,8 +7,8 @@
 /* globals $ */
 /* eslint-env node, dirigible */
 
-var database = require('api/db/database');
-var response = require('api/http/response');
+var database = require('db/database');
+var response = require('net/http/response');
 
 var datasource = database.getDatasource(); // default
 //var datasource = db.getNamedDatasource("name-of-the-datasource");
@@ -36,7 +36,7 @@ response.close();
 ```
 
 # Config API
-- Module: **('api/config')**
+- Module: **('core/config')**
 - Issue: https://github.com/dirigiblelabs/core_api/issues/16
 - Example:
 
@@ -44,8 +44,8 @@ response.close();
 /* globals $ */
 /* eslint-env node, dirigible */
 
-var config = require('api/config');
-var response = require('api/http/response');
+var config = require('core/config');
+var response = require('net/http/response');
 
 var properties = {
 		"property1": "value1",
@@ -72,7 +72,7 @@ response.close();
 # HTTP API
 ## Response API
 
-- Module **('api/http/response')**
+- Module **('net/http/response')**
 - Issue: https://github.com/dirigiblelabs/core_api/issues/1
 - Example:
 
@@ -80,7 +80,7 @@ response.close();
 /* globals $ */
 /* eslint-env node, dirigible */
 
-var response = require('api/http/response');
+var response = require('net/http/response');
 
 response.println("Hello World!");
 response.flush();
@@ -88,7 +88,7 @@ response.close();
 ```
 
 ## Request API
-- Module **('api/http/request')**
+- Module **('net/http/request')**
 - Issue: https://github.com/dirigiblelabs/core_api/issues/4
 - Example:
 
@@ -96,8 +96,8 @@ response.close();
 /* globals $ */
 /* eslint-env node, dirigible */
 
-var request = require('api/http/request');
-var response = require('api/http/response');
+var request = require('net/http/request');
+var response = require('net/http/response');
 
 var method = request.getMethod();
 
@@ -106,7 +106,7 @@ response.flush();
 response.close();
 ```
 ## Session API
-- Module **('api/http/session')**
+- Module **('net/http/session')**
 - Issue: https://github.com/dirigiblelabs/core_api/issues/5
 - Example:
 
@@ -114,8 +114,8 @@ response.close();
 /* globals $ */
 /* eslint-env node, dirigible */
 
-var session = require('api/http/session');
-var response = require('api/http/response');
+var session = require('net/http/session');
+var response = require('net/http/response');
 
 response.println("SessionId: " + session.getId());
 
@@ -131,7 +131,7 @@ response.close();
 ```
 
 ## HTTP Client API 
-- Module **('api/http/client')**
+- Module **('net/http/client')**
 - Issue: https://github.com/dirigiblelabs/core_api/issues/3
 - Example:
 
@@ -139,8 +139,8 @@ response.close();
 /* globals $ */
 /* eslint-env node, dirigible */
 
-var http = require('api/http/client');
-var response = require('api/http/response');
+var http = require('net/http/client');
+var response = require('net/http/response');
 
 var options = {
     method: 'GET', // default
@@ -159,7 +159,7 @@ response.close();
 ```
 
 # Mail API
-- Module **('api/service/mail')**
+- Module **('service/mail')**
 - Issue: https://github.com/dirigiblelabs/core_api/issues/12
 - Example:
 
@@ -167,8 +167,8 @@ response.close();
 /* globals $ */
 /* eslint-env node, dirigible */
 
-var mail = require('api/service/mail');
-var response = require('api/http/response');
+var mail = require('service/mail');
+var response = require('net/http/response');
 
 var from = "dirigiblelabs@eclipse.org";
 var to = "example@gmail.com";
@@ -185,7 +185,7 @@ response.close();
 # Utils API
 
 ## XSS API
-- Module **('api/utils/xss')**
+- Module **('utils/xss')**
 - Issue: https://github.com/dirigiblelabs/core_api/issues/12
 - Example:
 
@@ -193,8 +193,8 @@ response.close();
 /* globals $ */
 /* eslint-env node, dirigible */
 
-var xss = require('api/utils/xss');
-var response = require('api/http/response');
+var xss = require('utils/xss');
+var response = require('net/http/response');
 
 raw = "John's bag";
 escaped = xss.escapeSql(raw);
@@ -222,7 +222,7 @@ console.trace("Trace.");
 ```
 
 # Messaging API
-- Module **('api/messaging')**
+- Module **('service/messaging')**
 - Issue: https://github.com/dirigiblelabs/core_api/issues/11
 - Example:
 
@@ -230,8 +230,8 @@ console.trace("Trace.");
 /* globals $ */
 /* eslint-env node, dirigible */
 
-var response = require('api/http/response');
-var messaging = require('api/messaging');
+var response = require('net/http/response');
+var messaging = require('service/messaging');
 
 messaging.registerClient("client1");
 messaging.registerClient("client2");
@@ -257,7 +257,7 @@ response.close();
 
 
 # Files API
-- Module **('api/io/files')**
+- Module **('io/files')**
 - Issue: https://github.com/dirigiblelabs/core_api/issues/21
 - Example:
 
@@ -265,8 +265,8 @@ response.close();
 /* globals $ */
 /* eslint-env node, dirigible */
 
-var files = require('api/io/files');
-var response = require('api/http/response');
+var files = require('io/files');
+var response = require('net/http/response');
 
 var file = files.get("../temp/./..");
 
