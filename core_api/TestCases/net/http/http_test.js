@@ -14,6 +14,9 @@ var options = {
 
 var httpResponse = http.request(options);
 
+var assert = require("assert");
+assert.assertEquals(1, 1);
+
 response.println(httpResponse.statusMessage);
 response.println(httpResponse.data);
 response.flush();

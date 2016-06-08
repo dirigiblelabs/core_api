@@ -8,7 +8,7 @@
  * SAP - initial API and implementation
  *******************************************************************************/
 
-/* globals $ javax */
+/* globals $ java javax */
 /* eslint-env node, dirigible */
 
 /**
