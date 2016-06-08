@@ -31,7 +31,8 @@ exports.write = function(outputStream, bytes) {
  * Read the stream content as a String
  */
 exports.readText = function(inputStream) {
-	return $.IOUtils.toString(inputStream.getInternalObject());
+	var internalBytes = $.IOUtils.toByteArray(inputStream.getInternalObject());
+	return new java.lang.String(internalBytes);
 };
 
 /**
