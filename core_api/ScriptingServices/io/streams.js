@@ -62,7 +62,7 @@ exports.copyLarge = function(inputStream, outputStream) {
 exports.InputStream = function(internalInputStream) {
 	this.internalInputStream = internalInputStream;
 	this.getInternalObject = inputStreamGetInternalObject;
-}
+};
 
 function inputStreamGetInternalObject() {
 	return this.internalInputStream;
@@ -74,7 +74,7 @@ function inputStreamGetInternalObject() {
 exports.OutputStream = function(internalOutputStream) {
 	this.internalOutputStream = internalOutputStream;
 	this.getInternalObject = outputStreamGetInternalObject;
-}
+};
 
 function outputStreamGetInternalObject() {
 	return this.internalOutputStream;
@@ -85,7 +85,7 @@ function outputStreamGetInternalObject() {
  */
 exports.createByteArrayInputStream = function(bytes) {
 	return new exports.ByteArrayInputStream(bytes);
-}
+};
 
 /**
  * ByteArrayInputStream object.
@@ -94,7 +94,7 @@ exports.ByteArrayInputStream = function(bytes) {
 	var internalBytes = exports.toJavaBytes(bytes);
 	this.internalInputStream = new java.io.ByteArrayInputStream(internalBytes);
 	this.getInternalObject = byteArrayInputStreamGetInternalObject;
-}
+};
 
 function byteArrayInputStreamGetInternalObject() {
 	return this.internalInputStream;
@@ -105,7 +105,7 @@ function byteArrayInputStreamGetInternalObject() {
  */
 exports.createByteArrayOutputStream = function() {
 	return new exports.ByteArrayOutputStream();
-}
+};
 
 /**
  * ByteArrayOutputStream object.
@@ -114,7 +114,7 @@ exports.ByteArrayOutputStream = function() {
 	this.internalOutputStream = new java.io.ByteArrayOutputStream();
 	this.getInternalObject = byteArrayOutputStreamGetInternalObject;
 	this.getBytes = byteArrayOutputStreamGetBytes;
-}
+};
 
 function byteArrayOutputStreamGetInternalObject() {
 	return this.internalOutputStream;
@@ -134,7 +134,7 @@ exports.toJavaBytes = function(bytes) {
 		internalBytes[i] = bytes[i];
 	}
 	return internalBytes;
-}
+};
 
 /**
  * Convert the Java byte array to a native JavaScript one. To be used internally by the API layer
@@ -145,4 +145,4 @@ exports.toJavaScriptBytes = function(internalBytes) {
 		bytes.push(internalBytes[i]);
 	}
 	return bytes;
-}
+};
