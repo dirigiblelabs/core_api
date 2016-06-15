@@ -12,7 +12,7 @@
 /* eslint-env node, dirigible */
 
 /**
- *
+ * Creates a new Thread by a runnable function and a name
  */
 exports.create = function(runnable, name) {
 	if (typeof runnable !== "function") {

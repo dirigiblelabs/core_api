@@ -11,7 +11,7 @@ var obj = {
 	syncWait: thread.sync(function () { 
     		console.log("I am synchronized waiter");
     		this.wait(5000);
-    		console.log("I waited 2s or I was interrupted?");
+    		console.log("I waited 5s or I was notified?");
    	}),
    	syncNotify: thread.sync(function () { 
     		console.log("I am synchronized notifier");
