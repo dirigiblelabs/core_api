@@ -114,6 +114,7 @@ exports.ByteArrayOutputStream = function() {
 	this.internalOutputStream = new java.io.ByteArrayOutputStream();
 	this.getInternalObject = byteArrayOutputStreamGetInternalObject;
 	this.getBytes = byteArrayOutputStreamGetBytes;
+	this.getText = byteArrayOutputStreamGetText;
 };
 
 function byteArrayOutputStreamGetInternalObject() {
@@ -123,6 +124,12 @@ function byteArrayOutputStreamGetInternalObject() {
 function byteArrayOutputStreamGetBytes() {
 	var internalBytes = this.internalOutputStream.toByteArray();
 	return exports.toJavaScriptBytes(internalBytes);
+}
+
+function byteArrayOutputStreamGetText() {
+	var bytes = this.getBytes();
+	var text = String.fromCharCode.apply(String, bytes);
+	return text;
 }
 
 /**

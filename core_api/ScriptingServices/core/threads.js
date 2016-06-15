@@ -22,7 +22,7 @@ exports.create = function(runnable, name) {
 };
 
 /**
- * Datasource object
+ * Thread object
  */
 function Thread(internalThread) {
 	this.internalThread = internalThread;
