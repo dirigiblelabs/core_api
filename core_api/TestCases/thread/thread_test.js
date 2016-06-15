@@ -11,11 +11,11 @@ function runnable() {
 	response.println("Hello World from a Thread!");
 };
 
-// Pass the JavaScript function instead of an object that implements
+// Pass a JavaScript function
 var worker = thread.create(runnable, "I am a thread");
 response.println(worker.getName());
 worker.start();
-worker.join();
+worker.join(); // to be able to print to the response
 
 response.flush();
 response.close();
