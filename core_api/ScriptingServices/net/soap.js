@@ -26,7 +26,7 @@ function Message(internalMessage) {
 	this.internalMessage = internalMessage;
 	this.getInternalObject = messageGetInternalObject;
 	this.getPart = messageGetPart;
-	this.update = messageUpdate;
+	this.saveChanges = messageSaveChanges;
 	this.getText = messageGetText;
 }
 
@@ -39,7 +39,7 @@ function messageGetPart() {
 	return new Part(internalPart);
 }
 
-function messageUpdate() {
+function messageSaveChanges() {
 	this.internalMessage.saveChanges();
 }
 

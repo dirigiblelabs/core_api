@@ -10,10 +10,10 @@ envelope.addNamespaceDeclaration("products", "http://ecommerce.com");
 var body = envelope.getBody();
 var productElement = body.addChildElement("name", "products");
 productElement.addTextNode("Tomatoes");
-var color = envelope.createName("color", "clr", "http://colors.com");
-productElement.addAttribute(color, "red");
+var colorName = envelope.createName("color", "clr", "http://colors.com");
+productElement.addAttribute(colorName, "red");
 
-message.update();
+message.saveChanges();
 
 response.println(message.getText());
 
