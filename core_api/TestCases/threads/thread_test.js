@@ -1,7 +1,7 @@
 /* globals $ */
 /* eslint-env node, dirigible */
 
-var thread = require('core/thread');
+var threads = require('core/threads');
 var response = require('net/http/response');
 
 response.setContentType("text/plain; charset=UTF-8");
@@ -12,7 +12,7 @@ function runnable() {
 };
 
 // Pass a JavaScript function
-var worker = thread.create(runnable, "I am a thread");
+var worker = threads.create(runnable, "I am a thread");
 response.println(worker.getName());
 worker.start();
 worker.join(); // to be able to print to the response
