@@ -132,6 +132,7 @@ function Body(internalBody) {
 	this.internalBody = internalBody;
 	this.getInternalObject = bodyGetInternalObject;
 	this.addChildElement = bodyAddChildElement;
+	this.getChildElements = bodyGetChildElements;
 }
 
 function bodyGetInternalObject() {
@@ -141,6 +142,16 @@ function bodyGetInternalObject() {
 function bodyAddChildElement(localName, prefix) {
 	var internalElement = this.internalBody.addChildElement(localName, prefix);
 	return new Element(internalElement);
+}
+
+function bodyGetChildElements() {
+	var childElements = [];
+	var internalElementsIterator = this.internalBody.getChildElements();
+	while (internalElementsIterator.hasNext()) {
+		var internalElement = internalElementsIterator.next();
+		childElements.push(new Element(internalElement));
+	}
+	return childElements;
 }
 
 /**
@@ -202,6 +213,10 @@ function Element(internalElement) {
 	this.addChildElement = elementAddChildElement;
 	this.addTextNode = elementAddTextNode;
 	this.addAttribute = elementAddAttribute;
+	this.getChildElements = elementGetChildElements;
+	this.getElementName = elementGetElementName;
+	this.getValue = elementGetValue;
+	this.isSOAPElement = elementIsSOAPElement;
 }
 
 function elementGetInternalObject() {
@@ -223,6 +238,39 @@ function elementAddAttribute(name, value) {
 	return new Element(internalElement);
 }
 
+function elementGetChildElements() {
+	var childElements = [];
+	var internalElementsIterator = this.internalElement.getChildElements();
+	while (internalElementsIterator.hasNext()) {
+		var internalElement = internalElementsIterator.next();
+		childElements.push(new Element(internalElement));
+	}
+	return childElements;
+}
+
+function elementGetElementName() {
+	try {
+		var internalName = this.internalElement.getElementName();
+		return new Name(internalName);
+	} catch(e) {
+	//  can we assume that always an exception here means the element is not an SOAPElement
+	//	console.log(e);
+	}
+	return null;
+}
+
+function elementGetValue() {
+	return this.internalElement.getValue();
+}
+
+function elementIsSOAPElement() {
+	return this.getElementName() !== null;
+}
+
+
+/**
+ * Call a given SOAP endpoint with a given request message
+ */
 exports.call = function(message, url) {
 	var soapConnectionFactory = javax.xml.soap.SOAPConnectionFactory.newInstance();
 	var internalConnection = soapConnectionFactory.createConnection();

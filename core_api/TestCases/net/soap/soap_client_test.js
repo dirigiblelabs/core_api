@@ -3,6 +3,8 @@
 var soap = require("net/soap");
 var response = require('net/http/response');
 
+response.setContentType("text/plain; charset=UTF-8");
+
 var requestMessage = soap.createMessage();
 var part = requestMessage.getPart();
 var envelope = part.getEnvelope();
@@ -24,5 +26,25 @@ var responseMessage = soap.call(requestMessage, "http://ws.cdyne.com/ip2geo/ip2g
 
 response.println("Response: " + responseMessage.getText());
 
+response.println("------");
+
+var responsePart = responseMessage.getPart();
+var responseEnvelope = responsePart.getEnvelope();
+var responseBody = responseEnvelope.getBody();
+var childElements = responseBody.getChildElements();
+printElements(childElements);
+
 response.flush();
 response.close();
+
+function printElements(childElements) {
+	childElements.forEach(function(element) {
+		if (element.isSOAPElement()) {
+			var name = element.getElementName();
+			response.print(name.getLocalName());
+			response.print(": ");
+			response.println(element.getValue());
+			printElements(element.getChildElements());
+		}
+	});
+}
