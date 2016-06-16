@@ -18,7 +18,7 @@ productElement.addAttribute(colorName, "red");
 
 message.save();
 
-response.println("Outgoing: " + message.getText());
+response.println("Message: " + message.getText());
 
 response.flush();
 response.close();

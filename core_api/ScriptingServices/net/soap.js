@@ -12,12 +12,45 @@
 /* eslint-env node, dirigible */
 
 var streams = require("io/streams");
+var request = require('net/http/request');
 
 exports.createMessage = function() {
 	var internalFactory = javax.xml.soap.MessageFactory.newInstance();
 	var internalMessage = internalFactory.createMessage();
 	return new Message(internalMessage);
 };
+
+exports.parseMessage = function(mimeHeaders, inputStream) {
+	var internalFactory = javax.xml.soap.MessageFactory.newInstance();
+	if (inputStream.getInternalObject()) {
+		try {
+			var internalMessage = internalFactory.createMessage(mimeHeaders.getInternalObject(), inputStream.getInternalObject());
+			var internalPart = internalMessage.getSOAPPart();
+			internalPart.getEnvelope();
+			return new Message(internalMessage);
+		} catch(e) {
+			console.error(e);
+			throw new Error("Input provided is null or in a worng format. HTTP method used must be POST. " + e.message);
+		}
+	}
+	throw new Error("Input provided is null.");
+};
+
+exports.parseRequest = function() {
+	if (request.getMethod().toUpperCase() !== "POST") {
+		throw new Error("HTTP method used must be POST.");	
+	}
+
+	var inputStream = request.getInput();
+	var mimeHeaders = exports.createMimeHeaders();
+	return exports.parseMessage(mimeHeaders, inputStream);
+};
+
+exports.createMimeHeaders = function() {
+	var internalMimeHeaders = javax.xml.soap.MimeHeaders();
+	return new MimeHeaders(internalMimeHeaders);
+};
+
 
 /**
  * SOAP Message
