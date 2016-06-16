@@ -26,7 +26,8 @@ function Message(internalMessage) {
 	this.internalMessage = internalMessage;
 	this.getInternalObject = messageGetInternalObject;
 	this.getPart = messageGetPart;
-	this.saveChanges = messageSaveChanges;
+	this.getMimeHeaders = messageGetMimeHeaders;
+	this.save = messageSaveChanges;
 	this.getText = messageGetText;
 }
 
@@ -37,6 +38,11 @@ function messageGetInternalObject() {
 function messageGetPart() {
 	var internalPart = this.internalMessage.getSOAPPart();
 	return new Part(internalPart);
+}
+
+function messageGetMimeHeaders() {
+	var internalMimeHeaders = this.internalMessage.getMimeHeaders();
+	return new MimeHeaders(internalMimeHeaders);
 }
 
 function messageSaveChanges() {
@@ -68,6 +74,23 @@ function partGetEnvelope() {
 }
 
 /**
+ * SOAP Mime Headers
+ */
+function MimeHeaders(internalMimeHeaders) {
+	this.internalMimeHeaders = internalMimeHeaders;
+	this.getInternalObject = mimeHeadersGetInternalObject;
+	this.addHeader = mimeHeadersAddHeader;
+}
+
+function mimeHeadersGetInternalObject() {
+	return this.internalMimeHeaders;
+}
+
+function mimeHeadersAddHeader(name, value) {
+	this.internalMimeHeaders.addHeader(name, value);
+}
+
+/**
  * SOAP Envelope
  */
 function Envelope(internalEnvelope) {
@@ -75,6 +98,7 @@ function Envelope(internalEnvelope) {
 	this.getInternalObject = envelopeGetInternalObject;
 	this.addNamespaceDeclaration = envelopeAddNamespaceDeclaration;
 	this.getBody = envelopeGetBody;
+	this.getHeader = envelopeGetHeader;
 	this.createName = envelopeCreateName;
 }
 
@@ -89,6 +113,11 @@ function envelopeAddNamespaceDeclaration(prefix, uri) {
 function envelopeGetBody() {
 	var internalBody = this.internalEnvelope.getBody();
 	return new Body(internalBody);
+}
+
+function envelopeGetHeader() {
+	var internalHeader = this.internalEnvelope.getHeader();
+	return new Header(internalHeader);
 }
 
 function envelopeCreateName(localName, prefix, uri) {
@@ -111,6 +140,24 @@ function bodyGetInternalObject() {
 
 function bodyAddChildElement(localName, prefix) {
 	var internalElement = this.internalBody.addChildElement(localName, prefix);
+	return new Element(internalElement);
+}
+
+/**
+ * SOAP Header
+ */
+function Header(internalHeader) {
+	this.internalHeader = internalHeader;
+	this.getInternalObject = headerGetInternalObject;
+	this.addHeaderElement = headerAddHeaderElement;
+}
+
+function headerGetInternalObject() {
+	return this.internalNeader;
+}
+
+function headerAddHeaderElement(name) {
+	var internalElement = this.internalHeader.addHeaderElement(name.getInternalObject());
 	return new Element(internalElement);
 }
 
@@ -172,12 +219,16 @@ function elementAddTextNode(text) {
 }
 
 function elementAddAttribute(name, value) {
-//	var qname = new javax.xml.namespace.QName(namespace, localName);
 	var internalElement = this.internalElement.addAttribute(name.getInternalObject(), value);
 	return new Element(internalElement);
 }
 
-
+exports.call = function(message, url) {
+	var soapConnectionFactory = javax.xml.soap.SOAPConnectionFactory.newInstance();
+	var internalConnection = soapConnectionFactory.createConnection();
+	var internalResponse = internalConnection.call(message.getInternalObject(), url);
+	return new Message(internalResponse);
+};
 
 exports.trustAll = function() {
 	// TODO

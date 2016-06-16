@@ -3,19 +3,26 @@
 var soap = require("net/soap");
 var response = require('net/http/response');
 
-var message = soap.createMessage();
-var part = message.getPart();
+var requestMessage = soap.createMessage();
+var part = requestMessage.getPart();
 var envelope = part.getEnvelope();
-envelope.addNamespaceDeclaration("products", "http://ecommerce.com");
+envelope.addNamespaceDeclaration("ws", "http://ws.cdyne.com/");
 var body = envelope.getBody();
-var productElement = body.addChildElement("name", "products");
-productElement.addTextNode("Tomatoes");
-var colorName = envelope.createName("color", "clr", "http://colors.com");
-productElement.addAttribute(colorName, "red");
+var resolveIPElement = body.addChildElement("ResolveIP", "ws");
+var ipAddressElement = resolveIPElement.addChildElement("ipAddress", "ws");
+ipAddressElement.addTextNode("213.239.203.158");
+var licenseKeyElement = resolveIPElement.addChildElement("licenseKey", "ws");
+licenseKeyElement.addTextNode("");
 
-message.saveChanges();
+var mimeHeaders = requestMessage.getMimeHeaders();
+mimeHeaders.addHeader("SOAPAction", "http://ws.cdyne.com/ResolveIP");
 
-response.println(message.getText());
+requestMessage.save();
+response.println("Request: " + requestMessage.getText());
+
+var responseMessage = soap.call(requestMessage, "http://ws.cdyne.com/ip2geo/ip2geo.asmx");
+
+response.println("Response: " + responseMessage.getText());
 
 response.flush();
 response.close();
