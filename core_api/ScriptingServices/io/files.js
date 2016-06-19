@@ -104,7 +104,7 @@ function fileIsHidden() {
 }
 
 function fileLastModified() {
-	return this.internalFile.lastModified();
+	return new Date(this.internalFile.lastModified());
 }
 
 function fileLength() {
