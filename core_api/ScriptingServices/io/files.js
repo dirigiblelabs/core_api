@@ -81,7 +81,7 @@ function fileGetName() {
 }
 
 function fileGetParent() {
-	return this.internalFile.getParent();
+	return new File(this.internalFile.getParent());
 }
 
 function fileIsDirectory() {
