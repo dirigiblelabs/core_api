@@ -215,9 +215,9 @@ exports.readText = function(path) {
 /**
  * Write a text content to a file
  */
-exports.writeText = function(path, content) {
+exports.writeText = function(path, text) {
 	var internalPath = java.nio.file.Paths.get(path);
-	java.nio.file.Files.write(internalPath, java.lang.String(content).getBytes());
+	java.nio.file.Files.write(internalPath, java.lang.String(text).getBytes());
 };
 
 /**
