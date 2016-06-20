@@ -11,6 +11,8 @@
 /* globals $ java */
 /* eslint-env node, dirigible */
 
+var streams = require("io/streams");
+
 exports.get = function(url, options) {
 	return handleRequest(url, 'GET', options);
 };
@@ -83,13 +85,13 @@ function addBody(request, options) {
 }
 
 function createResponse(httpResponse, options) {
-	return {
-		'statusCode': httpResponse.getStatusLine().getStatusCode(),
-		'statusMessage': httpResponse.getStatusLine().getReasonPhrase(),
-		'data': getResponseData(httpResponse, options),
-		'httpVersion': httpResponse.getProtocolVersion(),
-		'headers': getResponseHeaders(httpResponse)
-	};
+	var response = new HttpResponse();
+	response.statusCode = httpResponse.getStatusLine().getStatusCode();
+	response.statusMessage = httpResponse.getStatusLine().getReasonPhrase();
+	response.data = getResponseData(httpResponse, options);
+	response.httpVersion = httpResponse.getProtocolVersion();
+	response.headers = getResponseHeaders(httpResponse);
+	return response;
 }
 
 function getResponseData(httpResponse, options) {
@@ -104,18 +106,48 @@ function getResponseData(httpResponse, options) {
         isBinary = options.binary;
     }
 
-    return isBinary ? data : new java.lang.String(data);
+    return isBinary ? streams.toJavaScriptBytes(data) : new java.lang.String(data);
 }
 
 function getResponseHeaders(httpResponse) {
 	var headers = [];
 	var httpResponseHeaders = httpResponse.getAllHeaders();
 	for (var i = 0; i < httpResponseHeaders.length; i ++) {
-		var header = httpResponseHeaders[i];
-		headers.push({
-			'name': header.getName(),
-			'value': header.getValue()
-		});
+		var internalHeader = httpResponseHeaders[i];
+		var header = new HttpHeader();
+		header.name = internalHeader.getName();
+		header.value = internalHeader.getValue();
+		headers.push(header);
 	}
 	return headers;
+}
+
+/**
+ * HTTP Response object
+ */
+function HttpResponse() {
+	this.statusCode = 0;
+	this.statusMessage = "";
+	this.data = [];
+	this.httpVersion = "";
+	this.headers = [];
+}
+
+/**
+ * HTTP Header object
+ */
+function HttpHeader() {
+	this.name = "";
+	this.value = "";
+}
+
+/**
+ * HTTP Option object
+ */
+function HttpOptions() {
+	this.host = "";
+	this.port = 0;
+	this.method = "";
+	this.charset = "";
+	this.headers = [];
 }
