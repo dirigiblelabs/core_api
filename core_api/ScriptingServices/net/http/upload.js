@@ -30,12 +30,11 @@ exports.isMultipartContent = function() {
 };
 
 function createFileEntity(fileItem) {
-    var file = {
-        "name": fileItem.getName(),
-        "data": convertByteAray($.getIOUtils().toByteArray(fileItem.getInputStream())),
-        "contentType": getContentType(fileItem.getContentType()),
-        "size": fileItem.getSize()
-    };
+    var file = new HttpFileEntry();
+    file.name = fileItem.getName();
+    file.data = convertByteAray($.getIOUtils().toByteArray(fileItem.getInputStream()));
+    file.contentType = getContentType(fileItem.getContentType());
+    file.size = fileItem.getSize();
     return file;
 }
 
@@ -49,4 +48,15 @@ function convertByteAray(internalBytes) {
 		bytes.push(internalBytes[i]);
 	}
 	return bytes;
+}
+
+
+/**
+ * HTTP File Entry object
+ */
+function HttpFileEntry() {
+	this.name = "";
+	this.data = [];
+	this.contentType = "";
+	this.size = 0;
 }
