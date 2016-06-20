@@ -67,10 +67,13 @@ exports.getCookies = function() {
 		var cookie = new HttpCookie();
 		cookie.name = internalCookie.getName();
 		cookie.value = internalCookie.getValue();
+		cookie.comment = internalCookie.getComment();
 		cookie.maxAge = internalCookie.getMaxAge();
 		cookie.path = internalCookie.getPath();
 		cookie.domain = internalCookie.getDomain();
 		cookie.secure = internalCookie.getSecure();
+		cookie.version = internalCookie.getVersion();
+		cookie.httpOnly = internalCookie.isHttpOnly();
 		cookies.push(cookie);
 	}
 
@@ -114,10 +117,13 @@ exports.readInputText = function() {
 function HttpCookie() {
 	this.name = "";
 	this.value = "";
+	this.comment = "";
 	this.maxAge = 0;
 	this.path = "";
 	this.domain = "";
 	this.secure = false;
+	this.version = 0;
+	this.httpOnly = false;
 }
 
 /**
