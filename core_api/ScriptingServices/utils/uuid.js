@@ -11,10 +11,30 @@
 /* globals $ java */
 /* eslint-env node, dirigible */
 
-exports.fromString = function(uuid) {
-	return $.getUuidUtils().fromString(uuid);
+exports.validate = function(uuid) {
+	try {
+		var uuidUtils = $.getUuidUtils();
+		if (uuidUtils.fromString) {
+			uuidUtils.fromString(uuid).toString();
+		} else {
+			// nashorn compatibility
+			uuidUtils.class.static.fromString(uuid).toString();
+		}
+		return true;
+	} catch(e) {
+		console.error(e.message);
+		return false;
+	}
+
+
 };
 
 exports.randomUUID = function() {
-	return $.getUuidUtils().randomUUID();
+	var uuidUtils = $.getUuidUtils();
+	if (uuidUtils.randomUUID) {
+		return uuidUtils.randomUUID().toString();
+	} else {
+		// nashorn
+		return uuidUtils.class.static.randomUUID().toString();
+	}
 };
