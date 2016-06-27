@@ -29,7 +29,7 @@ exports.validate = function(uuid) {
 
 };
 
-exports.randomUUID = function() {
+exports.random = function() {
 	var uuidUtils = $.getUuidUtils();
 	if (uuidUtils.randomUUID) {
 		return uuidUtils.randomUUID().toString();
