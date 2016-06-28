@@ -8,17 +8,16 @@
  * SAP - initial API and implementation
  *******************************************************************************/
 
-/* globals $ java */
+/* globals $ java engine */
 /* eslint-env node, dirigible */
 
 exports.validate = function(uuid) {
 	try {
 		var uuidUtils = $.getUuidUtils();
-		if (uuidUtils.fromString) {
-			uuidUtils.fromString(uuid).toString();
-		} else {
-			// nashorn compatibility
+		if (engine === "nashorn") {
 			uuidUtils.class.static.fromString(uuid).toString();
+		} else {
+			uuidUtils.fromString(uuid).toString();
 		}
 		return true;
 	} catch(e) {
@@ -31,10 +30,8 @@ exports.validate = function(uuid) {
 
 exports.random = function() {
 	var uuidUtils = $.getUuidUtils();
-	if (uuidUtils.randomUUID) {
-		return uuidUtils.randomUUID().toString();
-	} else {
-		// nashorn
+	if (engine === "nashorn") {
 		return uuidUtils.class.static.randomUUID().toString();
 	}
+	return uuidUtils.randomUUID().toString();
 };
