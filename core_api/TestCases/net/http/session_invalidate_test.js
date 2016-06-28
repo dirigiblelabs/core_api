@@ -11,6 +11,6 @@ session.invalidate();
 
 var names = session.getAttributeNames();
 
-response.println("[Attribute Names]: " + names);
+response.println("[Attribute Names]: " + JSON.stringify(names));
 response.flush();
 response.close();

@@ -9,7 +9,7 @@ var parameterNames = request.getParameterNames();
 var parameters = request.getParameters();
 
 response.println("[Parameter]: " + parameter);
-response.println("[Parameter Names]: " + parameterNames);
-response.println("[Parameters]: " + parameters);
+response.println("[Parameter Names]: " + JSON.stringify(parameterNames));
+response.println("[Parameters]: " + JSON.stringify(parameters));
 response.flush();
 response.close();

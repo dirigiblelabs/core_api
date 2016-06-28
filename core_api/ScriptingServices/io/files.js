@@ -122,7 +122,13 @@ function fileList() {
 
 function fileListRoots() {
 	var list = [];
-	var internalList = this.internalFile.listRoots();
+	var internalList;
+	if (engine === "nashorn") {
+		internalList = this.internalFile.class.static.listRoots();
+	} else {
+		internalList = this.internalFile.listRoots();
+	}
+
 	for (i = 0; i < internalList.length; i++) {
 		list.push(internalList[i]);
 	}
@@ -209,7 +215,8 @@ exports.delete = function(path) {
 exports.readText = function(path) {
 	var internalPath = java.nio.file.Paths.get(path);
 	var bytes = java.nio.file.Files.readAllBytes(internalPath);
-	return new java.lang.String(bytes);
+	var result = new java.lang.String(bytes);
+	return result;
 };
 
 /**
@@ -217,7 +224,8 @@ exports.readText = function(path) {
  */
 exports.writeText = function(path, text) {
 	var internalPath = java.nio.file.Paths.get(path);
-	java.nio.file.Files.write(internalPath, java.lang.String(text).getBytes());
+	var asString = new java.lang.String(text);
+	java.nio.file.Files.write(internalPath, asString.getBytes());
 };
 
 /**

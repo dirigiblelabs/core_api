@@ -7,6 +7,6 @@ var response = require('net/http/response');
 session.setAttribute("attr2", "Value2");
 var names = session.getAttributeNames();
 
-response.println("[Attribute Names]: " + names);
+response.println("[Attribute Names]: " + JSON.stringify(names));
 response.flush();
 response.close();

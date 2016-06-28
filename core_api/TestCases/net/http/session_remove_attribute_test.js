@@ -9,6 +9,6 @@ session.removeAttribute("attr2");
 session.removeAttribute("repository-instance")
 var names = session.getAttributeNames();
 
-response.println("[Attribute Names]: " + names);
+response.println("[Attribute Names]: " + JSON.stringify(names));
 response.flush();
 response.close();

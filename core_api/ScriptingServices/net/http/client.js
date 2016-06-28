@@ -8,7 +8,7 @@
  * SAP - initial API and implementation
  *******************************************************************************/
 
-/* globals $ java */
+/* globals $ java engine */
 /* eslint-env node, dirigible */
 
 var streams = require("io/streams");
@@ -97,8 +97,13 @@ function createResponse(httpResponse, options) {
 function getResponseData(httpResponse, options) {
     var entity = httpResponse.getEntity();
     var content = entity.getContent();
-
-    var data = $.getIOUtils().toByteArray(content);
+    
+    var data;
+	if (engine === "nashorn") {
+		data = $.getIOUtils().class.static.toByteArray(content);
+	} else {
+		data = $.getIOUtils().toByteArray(content);
+	}
 
     $.getHttpUtils().consume(entity);
     var isBinary = false;
