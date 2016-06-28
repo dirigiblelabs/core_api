@@ -2,10 +2,13 @@
 /* eslint-env node, dirigible */
 
 var digest = require('utils/digest');
-var response = require('http/response');
+var response = require('net/http/response');
 
-response.println("" + digest.sha256('admin:admin'));
-response.println("" + digest.sha512('YWRtaW46YWRtaW4='));
+console.log("256: " + digest.sha256('admin:admin'));
+console.log("512: " + digest.sha512('admin:admin'));
+
+response.println("256: " + digest.sha256('admin:admin'));
+response.println("512: " + digest.sha512('admin:admin'));
 
 response.flush();
 response.close();
