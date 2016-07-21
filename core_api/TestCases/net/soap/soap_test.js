@@ -1,3 +1,4 @@
+/* globals $ */
 /* eslint-env node, dirigible */
 
 var soap = require("net/soap");
