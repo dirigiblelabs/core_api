@@ -10,10 +10,10 @@ var rootFolder = cmisSession.getRootFolder();
 var children = rootFolder.getChildren();
 response.println("Listing the children of the root folder:");
 for (var i in children) {
-	response.println("Folder ID: " + children[i].getId());
-	response.println("Folder Name: " + children[i].getName());
-	children[i].delete();
+	response.println("Object ID: " + children[i].getId());
+	response.println("Object Name: " + children[i].getName());
 }
+
 response.println("Creating a child folder");
 var properties = {};
 properties[cmis.OBJECT_TYPE_ID] = "cmis:folder";
@@ -28,8 +28,8 @@ try {
 response.println("Listing the children of the root folder again:");
 children = rootFolder.getChildren();
 for (var i in children) {
-	response.println(children[i].getId());
-	response.println(children[i].getName());
+	response.println("Object ID: " + children[i].getId());
+	response.println("Object Name: " + children[i].getName());
 }
 
 response.println("Deleting the newly created folder");

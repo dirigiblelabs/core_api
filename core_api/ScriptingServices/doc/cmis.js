@@ -11,6 +11,8 @@
 /* globals $ java org */
 /* eslint-env node, dirigible */
 
+var streams = require('io/streams');
+
 exports.getSession = function() {
 	var internalSession = $.getDocumentService().getSession();
 	return new Session(internalSession);
@@ -24,6 +26,7 @@ function Session(internalSession) {
 	this.getInternalObject = sessionGetInternalObject;
 	this.getRepositoryInfo = sessionGetRepositoryInfo;
 	this.getRootFolder = sessionGetRootFolder;
+	this.getObjectFactory = sessionGetObjectFactory;
 }
 
 function sessionGetInternalObject() {
@@ -38,6 +41,11 @@ function sessionGetRepositoryInfo() {
 function sessionGetRootFolder() {
 	var internalRootFolder = this.internalSession.getRootFolder();
 	return new Folder(internalRootFolder);
+}
+
+function sessionGetObjectFactory() {
+	var internalObjectFactory = this.internalSession.getObjectFactory();
+	return new ObjectFactory(internalObjectFactory);
 }
 
 /**
@@ -69,6 +77,7 @@ function Folder(internalFolder) {
 	this.internalFolder = internalFolder;
 	this.getInternalObject = folderGetInternalObject;
 	this.createFolder = folderCreateFolder;
+	this.createDocument = folderCreateDocument;
 	this.getChildren = folderGetChildren;
 	this.getPath = folderGetPath;
 	this.isRootFolder = folderIsRootFolder;
@@ -82,7 +91,6 @@ function folderGetInternalObject() {
 
 function folderCreateFolder(properties) {
 	var map = new java.util.HashMap();
-	
 	for (var property in properties) {
 	    if (properties.hasOwnProperty(property)) {
 	        map.put(property, properties[property]);
@@ -91,6 +99,31 @@ function folderCreateFolder(properties) {
 
 	var newFolder = this.internalFolder.createFolder(map);
 	return new Folder(newFolder);
+}
+
+var getInternalVersioningState = function(state) {
+	if (state === exports.VERSIONING_STATE_NONE) {
+		return org.apache.chemistry.opencmis.commons.enums.VersioningState.NONE;
+	} else if (state === exports.VERSIONING_STATE_MAJOR) {
+		return org.apache.chemistry.opencmis.commons.enums.VersioningState.MAJOR;
+	} else if (state === exports.VERSIONING_STATE_MINOR) {
+		return org.apache.chemistry.opencmis.commons.enums.VersioningState.MINOR;
+	}  else if (state === exports.VERSIONING_STATE_CHECKEDOUT) {
+		return org.apache.chemistry.opencmis.commons.enums.VersioningState.CHECKEDOUT;
+	}
+	return org.apache.chemistry.opencmis.commons.enums.VersioningState.MAJOR;
+}
+
+function folderCreateDocument(properties, contentStream, versioningState) {
+	var map = new java.util.HashMap();
+	for (var property in properties) {
+	    if (properties.hasOwnProperty(property)) {
+	        map.put(property, properties[property]);
+	    }
+	}
+
+	var newDocument = this.internalFolder.createDocument(map, contentStream.getInternalObject(), getInternalVersioningState(versioningState));
+	return new Document(newDocument);
 }
 
 function folderGetChildren() {
@@ -149,6 +182,65 @@ function cmisObjectDelete() {
 	return this.internalCmisObject.delete(true);
 }
 
+/**
+ * ObjectFactory object
+ */
+function ObjectFactory(internalObjectFactory) {
+	this.internalObjectFactory = internalObjectFactory;
+	this.getInternalObject = objectFactoryGetInternalObject;
+	this.createContentStream = objectFactoryCreateContentStream;
+}
+
+function objectFactoryGetInternalObject() {
+	return this.internalObjectFactory;
+}
+
+function objectFactoryCreateContentStream(filename, length, mimetype, inputStream) {
+	var internalContentStream = this.internalObjectFactory.createContentStream(filename, length, mimetype, inputStream.getInternalObject());
+	return new ContentStream(internalContentStream);
+}
+
+/**
+ * ContentStream object
+ */
+function ContentStream(internalContentStream) {
+	this.internalContentStream = internalContentStream;
+	this.getInternalObject = contentStreamGetInternalObject;
+}
+
+function contentStreamGetInternalObject() {
+	return this.internalContentStream;
+}
+
+
+/**
+ * Document object
+ */
+function Document(internalDocument) {
+	this.internalDocument = internalDocument;
+	this.getInternalObject = documentGetInternalObject;
+	this.getId = documentGetId;
+	this.getName = documentGetName;
+	this.delete = documentDelete;
+}
+
+function documentGetInternalObject() {
+	return this.internalDocument;
+}
+
+function documentGetId() {
+	return this.internalDocument.getId();
+}
+
+function documentGetName() {
+	return this.internalDocument.getName();
+}
+
+function documentDelete() {
+	return this.internalDocument.delete(true);
+}
+
+// CONSTANTS
 
 // ---- base ----
 exports.NAME = "cmis:name";
@@ -188,4 +280,10 @@ exports.TARGET_ID = "cmis:targetId";
 
 // ---- policy ----
 exports.POLICY_TEXT = "cmis:policyText";
+
+// ---- Versioning States ----
+exports.VERSIONING_STATE_NONE = "none";
+exports.VERSIONING_STATE_MAJOR = "major";
+exports.VERSIONING_STATE_MINOR = "minor";
+exports.VERSIONING_STATE_CHECKEDOUT = "checkedout";
 
