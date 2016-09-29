@@ -32,22 +32,33 @@ var inputStream = streams.createByteArrayInputStream(bytes);
 var contentStream = cmisSession.getObjectFactory().createContentStream(filename, bytes.length, mimetype, inputStream);
 
 var properties = {};
-properties[cmis.OBJECT_TYPE_ID] = "cmis:document";
+properties[cmis.OBJECT_TYPE_ID] = cmis.OBJECT_TYPE_DOCUMENT;
 properties[cmis.NAME] = filename;
 var newDocument;
 try {
-	newDocument = rootFolder.createDocument(properties, contentStream, cmis.MAJOR);
+	newDocument = rootFolder.createDocument(properties, contentStream, cmis.VERSIONING_STATE_MAJOR);
 } catch(e) {
 	response.println("Error: " + e);
 }
-
-response.println("Document ID: " + newDocument.getId());
+var documentId = newDocument.getId();
+response.println("Document ID: " + documentId);
 
 children = rootFolder.getChildren();
 response.println("Listing the children of the root folder again:");
 for (var i in children) {
 	response.println("Object ID: " + children[i].getId());
 	response.println("Object Name: " + children[i].getName());
+	response.println("Object Type: " + children[i].getType());
+}
+
+// Get the contents of the file
+var doc = cmisSession.getObject(documentId);
+contentStream = doc.getContentStream(); // returns null if the document has no content
+if (contentStream !== null) {
+    content = streams.readText(contentStream.getStream());
+    response.println("Contents of " + filename + " are: " + content);
+} else {
+    response.println("No content.");
 }
 
 response.println("Deleting the newly created document");

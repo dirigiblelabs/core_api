@@ -16,7 +16,7 @@ for (var i in children) {
 
 response.println("Creating a child folder");
 var properties = {};
-properties[cmis.OBJECT_TYPE_ID] = "cmis:folder";
+properties[cmis.OBJECT_TYPE_ID] = cmis.OBJECT_TYPE_FOLDER;
 properties[cmis.NAME] = "NewFolder";
 var newFolder;
 try {

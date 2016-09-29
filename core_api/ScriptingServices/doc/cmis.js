@@ -27,6 +27,8 @@ function Session(internalSession) {
 	this.getRepositoryInfo = sessionGetRepositoryInfo;
 	this.getRootFolder = sessionGetRootFolder;
 	this.getObjectFactory = sessionGetObjectFactory;
+	this.getObject = sessionGetObject;
+	this.getObjectByPath = sessionGetObjectByPath;
 }
 
 function sessionGetInternalObject() {
@@ -47,6 +49,29 @@ function sessionGetObjectFactory() {
 	var internalObjectFactory = this.internalSession.getObjectFactory();
 	return new ObjectFactory(internalObjectFactory);
 }
+
+function sessionGetObject(objectId) {
+	var internalCmisObject = this.internalSession.getObject(objectId);
+	var type = internalCmisObject.getType().getId();
+	if (type === exports.OBJECT_TYPE_DOCUMENT) {
+		return new Document(internalCmisObject);
+	} else if (type === exports.OBJECT_TYPE_FOLDER) {
+		return new Folder(internalCmisObject);
+	}
+	throw new Error("Unsupported CMIS object type: " + type);
+}
+
+function sessionGetObjectByPath(path) {
+	var internalCmisObject = this.internalSession.getObjectByPath(path);
+	var type = internalCmisObject.getType().getId();
+	if (type === exports.OBJECT_TYPE_DOCUMENT) {
+		return new Document(internalCmisObject);
+	} else if (type === exports.OBJECT_TYPE_FOLDER) {
+		return new Folder(internalCmisObject);
+	}
+	throw new Error("Unsupported CMIS object type: " + type);
+}
+
 
 /**
  * RepositoryInfo object
@@ -163,6 +188,7 @@ function CmisObject(internalCmisObject) {
 	this.getInternalObject = cmisObjectGetInternalObject;
 	this.getId = cmisObjectGetId;
 	this.getName = cmisObjectGetName;
+	this.getType = cmisObjectGetType;
 	this.delete = cmisObjectDelete;
 }
 
@@ -178,9 +204,14 @@ function cmisObjectGetName() {
 	return this.internalCmisObject.getName();
 }
 
+function cmisObjectGetType() {
+	return this.internalCmisObject.getType().getId();
+}
+
 function cmisObjectDelete() {
 	return this.internalCmisObject.delete(true);
 }
+
 
 /**
  * ObjectFactory object
@@ -206,10 +237,16 @@ function objectFactoryCreateContentStream(filename, length, mimetype, inputStrea
 function ContentStream(internalContentStream) {
 	this.internalContentStream = internalContentStream;
 	this.getInternalObject = contentStreamGetInternalObject;
+	this.getStream = contentStreamGetStream;
 }
 
 function contentStreamGetInternalObject() {
 	return this.internalContentStream;
+}
+
+function contentStreamGetStream() {
+	var internalStream = this.internalContentStream.getStream();
+	return new streams.InputStream(internalStream);
 }
 
 
@@ -222,6 +259,7 @@ function Document(internalDocument) {
 	this.getId = documentGetId;
 	this.getName = documentGetName;
 	this.delete = documentDelete;
+	this.getContentStream = documentGetContentStream;
 }
 
 function documentGetInternalObject() {
@@ -240,9 +278,17 @@ function documentDelete() {
 	return this.internalDocument.delete(true);
 }
 
+function documentGetContentStream() {
+	var internalContentStream = this.internalDocument.getContentStream();
+	if (internalContentStream !== null) {
+		return new ContentStream(internalContentStream);
+	}
+	return null;
+}
+
 // CONSTANTS
 
-// ---- base ----
+// ---- Base ----
 exports.NAME = "cmis:name";
 exports.OBJECT_ID = "cmis:objectId";
 exports.OBJECT_TYPE_ID = "cmis:objectTypeId";
@@ -253,7 +299,7 @@ exports.LAST_MODIFIED_BY = "cmis:lastModifiedBy";
 exports.LAST_MODIFICATION_DATE = "cmis:lastModificationDate";
 exports.CHANGE_TOKEN = "cmis:changeToken";
 
-// ---- document ----
+// ---- Document ----
 exports.IS_IMMUTABLE = "cmis:isImmutable";
 exports.IS_LATEST_VERSION = "cmis:isLatestVersion";
 exports.IS_MAJOR_VERSION = "cmis:isMajorVersion";
@@ -269,16 +315,16 @@ exports.CONTENT_STREAM_MIME_TYPE = "cmis:contentStreamMimeType";
 exports.CONTENT_STREAM_FILE_NAME = "cmis:contentStreamFileName";
 exports.CONTENT_STREAM_ID = "cmis:contentStreamId";
 
-// ---- folder ----
+// ---- Folder ----
 exports.PARENT_ID = "cmis:parentId";
 exports.ALLOWED_CHILD_OBJECT_TYPE_IDS = "cmis:allowedChildObjectTypeIds";
 exports.PATH = "cmis:path";
 
-// ---- relationship ----
+// ---- Relationship ----
 exports.SOURCE_ID = "cmis:sourceId";
 exports.TARGET_ID = "cmis:targetId";
 
-// ---- policy ----
+// ---- Policy ----
 exports.POLICY_TEXT = "cmis:policyText";
 
 // ---- Versioning States ----
@@ -287,3 +333,10 @@ exports.VERSIONING_STATE_MAJOR = "major";
 exports.VERSIONING_STATE_MINOR = "minor";
 exports.VERSIONING_STATE_CHECKEDOUT = "checkedout";
 
+// ---- Object Types ----
+exports.OBJECT_TYPE_DOCUMENT = "cmis:document";
+exports.OBJECT_TYPE_FOLDER = "cmis:folder";
+exports.OBJECT_TYPE_RELATIONSHIP = "cmis:relationship";
+exports.OBJECT_TYPE_POLICY = "cmis:policy";
+exports.OBJECT_TYPE_ITEM = "cmis:item";
+exports.OBJECT_TYPE_SECONDARY = "cmis:secondary";
