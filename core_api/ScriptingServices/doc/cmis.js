@@ -110,6 +110,7 @@ function Folder(internalFolder) {
 	this.isRootFolder = folderIsRootFolder;
 	this.getFolderParent = folderGetFolderParent;
 	this.delete = folderDelete;
+	this.rename = folderRename;
 }
 
 function folderGetInternalObject() {
@@ -190,6 +191,11 @@ function folderDelete() {
 	return this.internalFolder.delete(true);
 }
 
+function folderRename(newName) {
+	return this.internalFolder.rename(newName, true);
+}
+
+
 /**
  * CmisObject object
  */
@@ -200,6 +206,7 @@ function CmisObject(internalCmisObject) {
 	this.getName = cmisObjectGetName;
 	this.getType = cmisObjectGetType;
 	this.delete = cmisObjectDelete;
+	this.rename = cmisObjectRename;
 }
 
 function cmisObjectGetInternalObject() {
@@ -220,6 +227,10 @@ function cmisObjectGetType() {
 
 function cmisObjectDelete() {
 	return this.internalCmisObject.delete(true);
+}
+
+function cmisObjectRename(newName) {
+	return this.internalCmisObject.rename(newName, true);
 }
 
 
@@ -270,6 +281,7 @@ function Document(internalDocument) {
 	this.getName = documentGetName;
 	this.delete = documentDelete;
 	this.getContentStream = documentGetContentStream;
+	this.rename = documentRename;
 }
 
 function documentGetInternalObject() {
@@ -287,6 +299,11 @@ function documentGetName() {
 function documentDelete() {
 	return this.internalDocument.delete(true);
 }
+
+function documentRename(newName) {
+	return this.internalDocument.rename(newName, true);
+}
+
 
 function documentGetContentStream() {
 	var internalContentStream = this.internalDocument.getContentStream();
