@@ -11,8 +11,8 @@
 /* globals $ java org */
 /* eslint-env node, dirigible */
 
-exports.getWorker = function(type) {
-	var internalWorker = $.getGenerationService().getGenerationWorker(type, $.getRequest());
+exports.getWorker = function(category) {
+	var internalWorker = $.getGenerationService().getGenerationWorker(category, $.getRequest());
 	return new Worker(internalWorker);
 };
 
@@ -41,7 +41,7 @@ function workerGetTemplates() {
 // CONSTANTS
 
 // ---- Worker Types ----
-exports.WORKER_TYPE_DATA_STRUCTURES = "DataStructures";
-exports.WORKER_TYPE_SCRIPTING_SERVICES = "ScriptingServices";
-exports.WORKER_TYPE_WEB_CONTENT = "WebContent";
-exports.WORKER_TYPE_WEB_CONTENT_FOR_ENTITY = "WebContentForEntity";
+exports.WORKER_CATEGORY_DATA_STRUCTURES = "DataStructures";
+exports.WORKER_CATEGORY_SCRIPTING_SERVICES = "ScriptingServices";
+exports.WORKER_CATEGORY_WEB_CONTENT = "WebContent";
+exports.WORKER_CATEGORY_WEB_CONTENT_FOR_ENTITY = "WebContentForEntity";

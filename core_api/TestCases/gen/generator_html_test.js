@@ -4,7 +4,8 @@
 var generator = require('gen/generator');
 var response = require('net/http/response');
 
-var genWorker = generator.getWorker(generator.WORKER_TYPE_WEB_CONTENT);
+var genWorker = generator.getWorker(generator.WORKER_CATEGORY_WEB_CONTENT);
+
 var parameters = {
   "templateType":"index_page",
   "fileName":"index.html",
