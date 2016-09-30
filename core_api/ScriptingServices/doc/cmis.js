@@ -101,8 +101,8 @@ function repositoryInfoGetName() {
 function Folder(internalFolder) {
 	this.internalFolder = internalFolder;
 	this.getInternalObject = folderGetInternalObject;
-	this.getName = folderGetId;
-	this.getType = folderGetName;
+	this.getId = folderGetId;
+	this.getName = folderGetName;
 	this.createFolder = folderCreateFolder;
 	this.createDocument = folderCreateDocument;
 	this.getChildren = folderGetChildren;
