@@ -1,7 +1,7 @@
 /* globals $ */
 /* eslint-env node, dirigible */
 
-var repository = require('service/repository');
+var repository = require('platform/repository');
 var response = require('net/http/response');
 
 // create a collection
