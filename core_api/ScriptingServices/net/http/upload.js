@@ -81,6 +81,7 @@ function HttpFileEntry(fileItem, lazy) {
 	this.internalStream = null;
 	this.loadData = httpFileEntryLoadData;
 	this.copyData = httpFileEntryCopyData;
+	this.getInputStream = httpFileEntryGetInputStream;
 }
 
 function httpFileEntryLoadData() {
@@ -101,5 +102,8 @@ function httpFileEntryLoadData() {
 function httpFileEntryCopyData(outputStream) {
 	var inputStream = new streams.InputStream(this.internalStream);
 	streams.copy(inputStream, outputStream);
-	
+}
+
+function httpFileEntryGetInputStream() {
+	return new streams.InputStream(this.internalStream);
 }
