@@ -81,6 +81,7 @@ function Project(internalProject) {
 	this.close = projectClose;
 	this.getFolder = projectGetFolder;
 	this.getFile = projectGetFile;
+	this.exists = projectExists;
 }
 
 function projectGetInternalObject() {
@@ -117,6 +118,9 @@ function projectGetFile(name) {
 	return new File(internalFile);
 }
 
+function projectExists() {
+	return this.internalProject.exists();
+}
 
 /**
  * Folder object
@@ -189,7 +193,7 @@ function fileGetInternalObject() {
 }
 
 function fileCreate(inputStream) {
-	this.internalFile.create(inputStream.getInternalObject());
+	this.internalFile.create(inputStream.getInternalObject(), true, null);
 }
 
 function fileDelete() {
