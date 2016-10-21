@@ -2,59 +2,20 @@
 /* eslint-env node, dirigible */
 
 var extensions = require('core/extensions');
+
 var assert = require('core/assert');
+var tests = require('service/tests');
 var response = require('net/http/response');
 
 executeTests();
 
 function executeTests() {
-	var testResult = {
-		'status': 'OK',
-	};
+	var testResult = tests.execute([testGetExtensionPoint, testCreateExtensionPoint, testUpdateExtensionPoint, testGetExtension, testCreateExtension, testUpdateExtension]);
 
-	try {
-		testAPIExists();
-		testGetExtensionPoint();
-		testCreateExtensionPoint();
-		testUpdateExtensionPoint()
-		testGetExtension();
-		testCreateExtension();
-		testUpdateExtension();
-	} catch (e) {
-		testResult.status = 'Failed';
-		testResult.errorInfo = e;
-	}
-
-	response.setStatus(getTestsResultResponseStatus(testResult));
-	response.println(getTestsResultResponseText(testResult));
+	response.setStatus(tests.getHttpStatus(testResult));
+	response.println(tests.getText(testResult));
 	response.flush();
 	response.close();
-}
-
-function getTestsResultResponseStatus(testResult) {
-	if (isValidJSON(testResult) && testResult.status === 'OK') {
-		return response.OK;
-	}
-	return response.EXPECTATION_FAILED;
-}
-
-function getTestsResultResponseText(testResult) {
-	if (isValidJSON(testResult)) {
-		return JSON.stringify(testResult, null, 2);
-	}
-	return testResult;
-}
-
-function isValidJSON(data) {
-	try {
-		JSON.stringify(data);
-		return true;
-	} catch(e) {
-		return false;
-	}
-}
-function testAPIExists() {
-	assert.assertNotNull(extensions, 'The extensions API is null!');
 }
 
 function testGetExtensionPoint() {
