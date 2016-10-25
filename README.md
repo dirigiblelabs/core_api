@@ -1,3 +1,8 @@
+# Overview
+Enterprise JavaScript APIs build for [Eclipse Dirigible](https://github.com/eclipse/dirigible).
+
+The complete set of APIs, documentation and examples can be found [here](http://api.dirigible.io).
+
 # Database API
 - Module: **('db/database')**
 - Issue: https://github.com/dirigiblelabs/core_api/issues/9
