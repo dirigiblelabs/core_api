@@ -13,6 +13,17 @@
 
 var response = require('net/http/response');
 
+var setUpFunction;
+var tearDownFunction;
+
+exports.before = function(setUp) {
+	setUpFunction = setUp;
+};
+
+exports.after = function(tearDown) {
+	tearDownFunction = tearDown;
+};
+
 exports.execute = function(testFunctions) {
 	var testResult = {
 		'status': 'OK',
@@ -28,8 +39,11 @@ exports.execute = function(testFunctions) {
 	
 	for (var i = 0; i < testFunctions.length; i ++) {
 		try {
+			beforeTest();
 			testFunctions[i]();
+			afterTest();
 		} catch (e) {
+			afterTest();
 			testResult.status = 'Failed';
 			testResult.tests.failed.count ++;
 			testResult.tests.failed.failureInfo.push({
@@ -58,6 +72,17 @@ exports.getText = function(testResult) {
 	return testResult;
 };
 
+function beforeTest() {
+	if (setUpFunction !== undefined && setUpFunction !== null) {
+		setUpFunction();
+	}
+}
+
+function afterTest() {
+	if (tearDownFunction !== undefined && tearDownFunction !== null) {
+		tearDownFunction();
+	}
+}
 function isValidJSON(data) {
 	try {
 		JSON.stringify(data);
