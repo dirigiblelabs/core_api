@@ -2,12 +2,32 @@
 /* eslint-env node, dirigible */
 
 var cmis = require('doc/cmis');
+
+var assert = require('core/assert');
+var tests = require('service/tests');
 var response = require('net/http/response');
 
-var cmisSession = cmis.getSession();
+executeTests();
 
-response.println(cmisSession.getRepositoryInfo().getId());
-response.println(cmisSession.getRepositoryInfo().getName());
-response.flush();
-response.close();
+function executeTests() {
+	var testResult = tests.execute([testGetCmisSessionId, testGetCmisSessionName]);
 
+	response.setStatus(tests.getHttpStatus(testResult));
+	response.println(tests.getText(testResult));
+	response.flush();
+	response.close();
+}
+
+function testGetCmisSessionId() {
+	var cmisSession = cmis.getSession();
+	var sessionId = cmisSession.getRepositoryInfo().getId();
+
+	assert.assertNotNull(sessionId, 'The CMIS session Id is null!');
+}
+
+function testGetCmisSessionName() {
+	var cmisSession = cmis.getSession();
+	var sessionName = cmisSession.getRepositoryInfo().getName();
+
+	assert.assertNotNull(sessionName, 'The CMIS session name is null!');
+}
