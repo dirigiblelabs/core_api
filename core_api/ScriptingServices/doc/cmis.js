@@ -188,7 +188,7 @@ function folderGetFolderParent() {
 }
 
 function folderDelete() {
-	return this.internalFolder.delete(true);
+	return this.internalFolder.delete();
 }
 
 function folderRename(newName) {
@@ -226,7 +226,7 @@ function cmisObjectGetType() {
 }
 
 function cmisObjectDelete() {
-	return this.internalCmisObject.delete(true);
+	return this.internalCmisObject.delete();
 }
 
 function cmisObjectRename(newName) {
