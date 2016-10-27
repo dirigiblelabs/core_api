@@ -2,42 +2,64 @@
 /* eslint-env node, dirigible */
 
 var xss = require('utils/xss');
+
+var assert = require('core/assert');
+var tests = require('service/tests');
 var response = require('net/http/response');
 
-var raw = 'a\'b,c|d;e"f';
-var escaped = xss.escapeCsv(raw);
-response.println("CSV");
-response.println(raw);
-response.println(escaped);
+executeTests();
 
-raw = '<br><lt>';
-escaped = xss.escapeHtml(raw);
-response.println();
-response.println("HTML");
-response.println(raw);
-response.println(escaped);
+function executeTests() {
+	var testResult = tests.execute([
+		testEscapeCsv,
+		testEscapeHtml,
+		testEscapeJavaScript,
+		testEscapeSql,
+		testEscapeXml
+	]);
 
-raw = '"hi" I\'m John';
-escaped = xss.escapeJavaScript(raw);
-response.println();
-response.println("JavaScript");
-response.println(raw);
-response.println(escaped);
+	response.setStatus(tests.getHttpStatus(testResult));
+	response.println(tests.getText(testResult));
+	response.flush();
+	response.close();
+}
 
-raw = "John's bag";
-escaped = xss.escapeSql(raw);
-response.println();
-response.println("SQL");
-response.println(raw);
-response.println(escaped);
+function testEscapeCsv() {
+	var expectedOutput = '"a\'b,c|d;e""f"';
+	var actualOutput = xss.escapeCsv('a\'b,c|d;e"f');
 
-raw = "<tag>";
-escaped = xss.escapeXml(raw);
-response.println();
-response.println("XML");
-response.println(raw);
-response.println(escaped);
+	assert.assertNotNull(actualOutput);
+	assert.assertEquals(expectedOutput, actualOutput);
+}
 
+function testEscapeHtml() {
+	var expectedOutput = '&lt;br&gt;&lt;lt&gt;';
+	var actualOutput = xss.escapeHtml('<br><lt>');
 
-response.flush();
-response.close();
+	assert.assertNotNull(actualOutput);
+	assert.assertEquals(expectedOutput, actualOutput);
+}
+
+function testEscapeJavaScript() {
+	var expectedOutput = '<script>alert(\\\"XSS Test\\\");<\\/alert>';
+	var actualOutput = xss.escapeJavaScript('<script>alert("XSS Test");</alert>');
+
+	assert.assertNotNull(actualOutput);
+	assert.assertEquals(expectedOutput, actualOutput);
+}
+
+function testEscapeSql() {
+	var expectedOutput = 'John\'\'s bag';
+	var actualOutput = xss.escapeSql('John\'s bag');
+
+	assert.assertNotNull(actualOutput);
+	assert.assertEquals(expectedOutput, actualOutput);
+}
+
+function testEscapeXml() {
+	var expectedOutput = '&lt;tag&gt;';
+	var actualOutput = xss.escapeXml('<tag>');
+
+	assert.assertNotNull(actualOutput);
+	assert.assertEquals(expectedOutput, actualOutput);
+}
