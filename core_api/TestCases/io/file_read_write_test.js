@@ -17,6 +17,7 @@ function executeTests() {
 	var testResult = tests.execute([
 		testGetFile,
 		testCreateFile,
+		testDeleteFile,
 		testRead,
 		testReadText,
 		testWrite,
@@ -47,6 +48,16 @@ function testCreateFile() {
 	 var file = files.get(expectedFileDirectory);
 	 assert.assertTrue(file.exists());
 	 assert.assertTrue(file.isFile());
+}
+
+function testDeleteFile() {
+	var expectedFileDirectory = TEST_FILE_NAME;
+
+	files.createFile(expectedFileDirectory);
+	files.delete(expectedFileDirectory);
+
+	 var file = files.get(expectedFileDirectory);
+	 assert.assertFalse(file.exists());
 }
 
 function testRead() {
