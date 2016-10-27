@@ -9,6 +9,7 @@ executeTests();
 function executeTests() {
 	var testResult = itests.execute(getTests());
 
+	response.setContentType('application/javascript');
 	response.setStatus(itests.getHttpStatus(testResult));
 	response.println(itests.getText(testResult));
 	response.flush();
