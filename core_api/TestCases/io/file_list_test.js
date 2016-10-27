@@ -2,13 +2,41 @@
 /* eslint-env node, dirigible */
 
 var files = require('io/files');
+
+var assert = require('core/assert');
+var tests = require('service/tests');
 var response = require('net/http/response');
 
-var file = files.get("../temp/./..");
+const TEST_FOLDER_NAME = '../temp/./..';
 
-response.println("[File List]: " + file.list());
-response.println("[File List Roots]: " + file.listRoots());
-response.println("[File Filter]: " + file.filter("I"));
+executeTests();
 
-response.flush();
-response.close();
+function executeTests() {
+	var testResult = tests.execute([testFileList, testFileListRoots, testFileFilter]);
+
+	response.setStatus(tests.getHttpStatus(testResult));
+	response.println(tests.getText(testResult));
+	response.flush();
+	response.close();
+}
+
+function testFileList() {
+	var folder = files.get(TEST_FOLDER_NAME);
+	var list = folder.list();
+
+	assert.assertNotNull(list);
+}
+
+function testFileListRoots() {
+	var folder = files.get(TEST_FOLDER_NAME);
+	var list = folder.listRoots();
+
+	assert.assertNotNull(list);
+}
+
+function testFileFilter() {
+	var folder = files.get(TEST_FOLDER_NAME);
+	var filter = folder.filter('I');
+
+	assert.assertNotNull(filter);
+}
