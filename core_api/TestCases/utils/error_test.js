@@ -2,25 +2,23 @@
 /* eslint-env node, dirigible */
 
 var errorUtils = require('utils/error');
+
 var assert = require('core/assert');
+var tests = require('service/tests');
 var response = require('net/http/response');
 
 executeTests();
 
+executeTests();
+
 function executeTests() {
-	var testResult = {
-		'status': 'OK',
-	};
+	var testResult = tests.execute([
+		testErrorMessage,
+		testStackTrace
+	]);
 
-	try {
-		testErrorMessage();
-		testStackTrace();
-	} catch (e) {
-		testResult.status = 'Failed';
-		testResult.errorInfo = e;
-	}
-
-	response.println(JSON.stringify(testResult, null, 2));
+	response.setStatus(tests.getHttpStatus(testResult));
+	response.println(tests.getText(testResult));
 	response.flush();
 	response.close();
 }
