@@ -194,6 +194,5 @@ exports.textToByteArray = function(text) {
  */
 exports.byteArrayToText = function(bytes) {
 	var internalBytes = exports.toJavaBytes(bytes);
-	var text = new java.lang.String(internalBytes);
-	return text;
+	return String.fromCharCode.apply(String, exports.toJavaScriptBytes(internalBytes));
 };
