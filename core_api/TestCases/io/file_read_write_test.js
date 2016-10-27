@@ -1,31 +1,92 @@
 /* globals $ */
 /* eslint-env node, dirigible */
-
 var files = require('io/files');
+
+var assert = require('core/assert');
+var tests = require('service/tests');
 var response = require('net/http/response');
 
-files.createFile("../temp/test1/test5.txt");
-var file = files.get("../temp/test1/test2.txt");
-response.println("[File Exists?]: " + file.exists());
-response.println("[File Is File?]: " + file.isFile());
+const TEST_FILE_NAME = '../testFile.txt';
+const TEST_CONTENT = 'Hello World!';
+const TEST_CONTENT_BYTES = [72, 101, 108, 108, 111, 32, 87, 111, 114, 108, 100, 33];
 
-var content = files.readText("../temp/test1/test5.txt");
-response.println("[File Content]: " + content);
+executeTests();
 
-files.writeText("../temp/test1/test5.txt", "Some content");
-response.println("[File Write]: " + content);
+function executeTests() {
+	tests.after(cleanUp);
+	var testResult = tests.execute([
+		testGetFile,
+		testCreateFile,
+		testRead,
+		testReadText,
+		testWrite,
+		testWriteText
+	]);
 
-content = files.readText("../temp/test1/test5.txt");
-response.println("[File Content]: " + content);
+	response.setStatus(tests.getHttpStatus(testResult));
+	response.println(tests.getText(testResult));
+	response.flush();
+	response.close();
+}
 
-var bytes = files.read("../temp/test1/test5.txt");
-response.println("[File Content as Bytes]: " + bytes);
+function cleanUp() {
+	files.delete(TEST_FILE_NAME);
+}
 
-bytes = [83, 84, 85];
-files.write("../temp/test1/test5.txt", bytes);
+function testGetFile() {
+	var file = files.get('../temp/tests/testFileThatDoesNotExists.txt');
+	assert.assertNotNull(file);
+	assert.assertFalse(file.exists());
+}
 
-content = files.readText("../temp/test1/test5.txt");
-response.println("[File Content]: " + content);
+function testCreateFile() {
+	var expectedFileDirectory = TEST_FILE_NAME;
 
-response.flush();
-response.close();
+	files.createFile(expectedFileDirectory);
+
+	 var file = files.get(expectedFileDirectory);
+	 assert.assertTrue(file.exists());
+	 assert.assertTrue(file.isFile());
+}
+
+function testRead() {
+	var expectedBytes = [];
+
+	files.createFile(TEST_FILE_NAME);
+	var actualBytes = files.read(TEST_FILE_NAME);
+
+	assert.assertNotNull(actualBytes);
+	assert.assertEquals(expectedBytes, actualBytes);
+}
+
+function testReadText() {
+	var expectedContent = '';
+
+	files.createFile(TEST_FILE_NAME);
+	var actualContent = files.readText(TEST_FILE_NAME);
+
+	assert.assertNotNull(actualContent);
+	assert.assertEquals(expectedContent, actualContent);
+}
+
+function testWrite() {
+	var expectedBytes = TEST_CONTENT_BYTES;
+
+	files.createFile(TEST_FILE_NAME);
+	files.write(TEST_FILE_NAME, TEST_CONTENT_BYTES);
+
+	var actualBytes = files.read(TEST_FILE_NAME);
+	assert.assertNotNull(actualBytes);
+	assert.assertEquals(expectedBytes, actualBytes);
+}
+
+function testWriteText() {
+	var expectedContent = TEST_CONTENT;
+
+	files.createFile(TEST_FILE_NAME);
+	files.writeText(TEST_FILE_NAME, expectedContent);
+
+	var actualContent = files.readText(TEST_FILE_NAME);
+	assert.assertNotNull(actualContent);
+	assert.assertEquals(expectedContent, actualContent);
+}

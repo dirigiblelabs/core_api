@@ -215,8 +215,7 @@ exports.delete = function(path) {
 exports.readText = function(path) {
 	var internalPath = java.nio.file.Paths.get(path);
 	var bytes = java.nio.file.Files.readAllBytes(internalPath);
-	var result = new java.lang.String(bytes);
-	return result;
+	return String.fromCharCode.apply(String, streams.toJavaScriptBytes(bytes));
 };
 
 /**

@@ -14,14 +14,14 @@
 var response = require('net/http/response');
 
 var setUpFunction;
-var tearDownFunction;
+var cleanUpFunction;
 
 exports.before = function(setUp) {
 	setUpFunction = setUp;
 };
 
-exports.after = function(tearDown) {
-	tearDownFunction = tearDown;
+exports.after = function(cleanUp) {
+	cleanUpFunction = cleanUp;
 };
 
 exports.execute = function(testFunctions) {
@@ -79,8 +79,8 @@ function beforeTest() {
 }
 
 function afterTest() {
-	if (tearDownFunction !== undefined && tearDownFunction !== null) {
-		tearDownFunction();
+	if (cleanUpFunction !== undefined && cleanUpFunction !== null) {
+		cleanUpFunction();
 	}
 }
 function isValidJSON(data) {
