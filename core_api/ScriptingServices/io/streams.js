@@ -46,7 +46,7 @@ exports.readText = function(inputStream) {
 	} else {
 		internalBytes = $.IOUtils.toByteArray(inputStream.getInternalObject());
 	}
-	return new java.lang.String(internalBytes);
+	return String.fromCharCode.apply(String, exports.toJavaScriptBytes(internalBytes));
 };
 
 /**

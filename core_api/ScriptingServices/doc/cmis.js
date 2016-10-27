@@ -297,7 +297,7 @@ function documentGetName() {
 }
 
 function documentDelete() {
-	return this.internalDocument.delete(true);
+	return this.internalDocument.delete();
 }
 
 function documentRename(newName) {
