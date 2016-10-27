@@ -9,8 +9,6 @@ var response = require('net/http/response');
 
 executeTests();
 
-executeTests();
-
 function executeTests() {
 	var testResult = tests.execute([
 		testErrorMessage,
