@@ -2,17 +2,42 @@
 /* eslint-env node, dirigible */
 
 var files = require('io/files');
+
+var assert = require('core/assert');
+var tests = require('service/tests');
 var response = require('net/http/response');
 
-files.createDirectory("../temp/test1");
-var file = files.get("../temp/test1");
-response.println("[File Exists?]: " + file.exists());
-response.println("[File Is Directory?]: " + file.isDirectory());
+const TEST_DIRECTORY_NAME = '../temp/tests/directory/';
 
-files.createFile("../temp/test1/test1.txt");
-file = files.get("../temp/test1/test1.txt");
-response.println("[File Exists?]: " + file.exists());
-response.println("[File Is File?]: " + file.isFile());
+executeTests();
 
-response.flush();
-response.close();
+function executeTests() {
+	tests.after(cleanUp);
+	var testResult = tests.execute([testDirectoryExits, testDirectoryCreate]);
+
+	response.setStatus(tests.getHttpStatus(testResult));
+	response.println(tests.getText(testResult));
+	response.flush();
+	response.close();
+}
+
+function cleanUp() {
+	files.delete(TEST_DIRECTORY_NAME);
+}
+
+function testDirectoryExits() {
+	var directory = files.get('../temp/notExistingDirectory');
+
+	assert.assertNotNull(directory);
+	assert.assertFalse(directory.exists());
+}
+
+function testDirectoryCreate() {
+	files.createDirectory(TEST_DIRECTORY_NAME);
+
+	var directory = files.get(TEST_DIRECTORY_NAME);
+	assert.assertNotNull(directory);
+	assert.assertTrue(directory.exists());
+	assert.assertTrue(directory.isDirectory());
+	assert.assertFalse(directory.isFile());
+}
