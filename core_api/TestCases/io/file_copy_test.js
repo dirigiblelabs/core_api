@@ -2,28 +2,67 @@
 /* eslint-env node, dirigible */
 
 var files = require('io/files');
+
+var assert = require('core/assert');
+var tests = require('service/tests');
 var response = require('net/http/response');
 
-files.createFile("../temp/test1/test2.txt");
-var file = files.get("../temp/test1/test2.txt");
-response.println("[File Exists?]: " + file.exists());
-response.println("[File Is File?]: " + file.isFile());
+const TEST_FILE_NAME = '../temp/testFile.txt';
+const TEST_COPY_FILE_NAME = '../temp/copyTestFile.txt';
+const TEST_CONTENT = 'Hello World!';
 
-files.copy("../temp/test1/test2.txt", "../temp/test1/test3.txt");
-file = files.get("../temp/test1/test3.txt");
-response.println("[File Copied Exists?]: " + file.exists());
-response.println("[File Copied Is File?]: " + file.isFile());
+executeTests();
 
-files.move("../temp/test1/test3.txt", "../temp/test1/test4.txt");
-file = files.get("../temp/test1/test4.txt");
-response.println("[File Moved Exists?]: " + file.exists());
-response.println("[File Moved Is File?]: " + file.isFile());
+function executeTests() {
+	tests.after(cleanUp);
+	var testResult = tests.execute([testCopy, testMove]);
 
-files.delete("../temp/test1/test2.txt");
-file = files.get("../temp/test1/test2.txt");
-response.println("[File Exists?]: " + file.exists());
-response.println("[File Is File?]: " + file.isFile());
+	response.setStatus(tests.getHttpStatus(testResult));
+	response.println(tests.getText(testResult));
+	response.flush();
+	response.close();
+}
 
+function cleanUp() {
+	files.delete(TEST_FILE_NAME);
+	files.delete(TEST_COPY_FILE_NAME);
+}
 
-response.flush();
-response.close();
+function testCopy() {
+	files.createFile(TEST_FILE_NAME);
+	files.writeText(TEST_FILE_NAME, TEST_CONTENT);
+
+	var copyFile = files.get(TEST_COPY_FILE_NAME);
+	assert.assertNotNull(copyFile);
+	assert.assertFalse(copyFile.exists());
+
+	files.copy(TEST_FILE_NAME, TEST_COPY_FILE_NAME);
+
+	assert.assertTrue(copyFile.exists());
+
+	var actualContent = files.readText(TEST_COPY_FILE_NAME);
+	assert.assertNotNull(actualContent);
+	assert.assertEquals(TEST_CONTENT, actualContent);
+}
+
+function testMove() {
+	files.createFile(TEST_FILE_NAME);
+	files.writeText(TEST_FILE_NAME, TEST_CONTENT);
+
+	var originalFile = files.get(TEST_FILE_NAME);
+	assert.assertNotNull(originalFile);
+	assert.assertTrue(originalFile.exists());
+
+	var moveFile = files.get(TEST_COPY_FILE_NAME);
+	assert.assertNotNull(moveFile);
+	assert.assertFalse(moveFile.exists());
+
+	files.move(TEST_FILE_NAME, TEST_COPY_FILE_NAME);
+
+	assert.assertTrue(moveFile.exists());
+	assert.assertFalse(originalFile.exists());
+
+	var actualContent = files.readText(TEST_COPY_FILE_NAME);
+	assert.assertNotNull(actualContent);
+	assert.assertEquals(TEST_CONTENT, actualContent);
+}
