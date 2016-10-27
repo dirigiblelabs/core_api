@@ -2,29 +2,63 @@
 /* eslint-env node, dirigible */
 
 var files = require('io/files');
+
+var assert = require('core/assert');
+var tests = require('service/tests');
 var response = require('net/http/response');
 
-var file = files.get("../temp");
+const TEST_FILE_PATH = '../temp';
 
-response.println("[File Executable?]: " + file.isExecutable());
-response.println("[File Readable?]: " + file.isReadable());
-response.println("[File Writable?]: " + file.isWritable());
+executeTests();
 
-response.println("[File Executable = false]: " + file.setExecutable(false));
-response.println("[File Readable = false]: " + file.setReadable(false));
-response.println("[File Writable = false]: " + file.setWritable(false));
+function executeTests() {
+	var testResult = tests.execute([
+		testExecutable,
+		testReadable,
+		testWritable
+	]);
 
-response.println("[File Executable?]: " + file.isExecutable());
-response.println("[File Readable?]: " + file.isReadable());
-response.println("[File Writable?]: " + file.isWritable());
+	response.setStatus(tests.getHttpStatus(testResult));
+	response.println(tests.getText(testResult));
+	response.flush();
+	response.close();
+}
 
-response.println("[File Executable = true]: " + file.setExecutable(true));
-response.println("[File Readable = true]: " + file.setReadable(true));
-response.println("[File Writable = true]: " + file.setWritable(true));
+function testExecutable() {
+	var file = files.get(TEST_FILE_PATH);
 
-response.println("[File Executable?]: " + file.isExecutable());
-response.println("[File Readable?]: " + file.isReadable());
-response.println("[File Writable?]: " + file.isWritable());
+	assert.assertNotNull(file);
+	assert.assertNotNull(file.isExecutable());
 
-response.flush();
-response.close();
+	file.setExecutable(false);
+	assert.assertFalse(file.isExecutable());
+
+	file.setExecutable(true);
+	assert.assertTrue(file.isExecutable());
+}
+
+function testReadable() {
+	var file = files.get(TEST_FILE_PATH);
+
+	assert.assertNotNull(file);
+	assert.assertNotNull(file.isReadable());
+
+	file.setReadable(false);
+	assert.assertFalse(file.isReadable());
+
+	file.setReadable(true);
+	assert.assertTrue(file.isReadable());
+}
+
+function testWritable() {
+	var file = files.get(TEST_FILE_PATH);
+
+	assert.assertNotNull(file);
+	assert.assertNotNull(file.isWritable());
+
+	file.setWritable(false);
+	assert.assertFalse(file.isWritable());
+
+	file.setWritable(true);
+	assert.assertTrue(file.isWritable());
+}
