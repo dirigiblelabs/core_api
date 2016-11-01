@@ -152,7 +152,7 @@ function Collection(internalCollection) {
 
 	this.getCollectionNames = function() {
 		var collectionNames = [];
-		var internalCollectionNames = this.internalCollection.getCollectionNames();
+		var internalCollectionNames = this.internalCollection.getCollectionsNames();
 		for (var i = 0; i< internalCollectionNames.size(); i++) {
 			collectionNames.push(internalCollectionNames.get(i));
 		}
@@ -174,7 +174,7 @@ function Collection(internalCollection) {
 
 	this.getResourceNames = function() {
 		var resourceNames = [];
-		var internalResourceNames = this.internalResource.getResourceNames();
+		var internalResourceNames = this.internalCollection.getResourcesNames();
 		for (var i = 0; i< internalResourceNames.size(); i++) {
 			resourceNames.push(internalResourceNames.get(i));
 		}
