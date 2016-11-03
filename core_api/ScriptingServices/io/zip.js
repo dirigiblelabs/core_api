@@ -14,12 +14,22 @@
 var streams = require("io/streams");
 
 /**
- * Read the stream content as a byte array
+ * Creates an input stream from a stream contaning a ZIP archive
  */
 exports.createZipInputStream = function(inputStream) {
 	var internalZipInputStream = new java.util.zip.ZipInputStream(inputStream.getInternalObject());
 	return new ZipInputStream(internalZipInputStream);
 };
+
+/**
+ * Creates an output stream for a ZIP archive
+ */
+exports.createZipOutputStream = function(outputStream) {
+	var internalZipOutputStream = new java.util.zip.ZipOutputStream(outputStream.getInternalObject());
+	return new ZipOutputStream(internalZipOutputStream);
+};
+
+
 
 /**
  * ZipInputStream object
@@ -36,7 +46,7 @@ function ZipInputStream(internalZipInputStream) {
 	    if (internalZipEntry === null) {
 	    	return null;
     	}
-		return new ZipEntry(internalZipEntry, this.internalZipInputStream);
+		return new ZipEntry(internalZipEntry, this.internalZipInputStream, null);
 	};
 	
 	this.close = function() {
@@ -46,14 +56,62 @@ function ZipInputStream(internalZipInputStream) {
 }
 
 /**
+ * ZipOutputStream object
+ */
+function ZipOutputStream(internalZipOutputStream) {
+	this.internalZipOutputStream = internalZipOutputStream;
+
+	this.getInternalObject = function() {
+		return this.internalZipOutputStream;
+	};
+	
+	this.createZipEntry = function(name) {
+		var internalZipEntry = new java.util.zip.ZipEntry(name);
+		var zipEntry = new ZipEntry(internalZipEntry, null, this.internalZipOutputStream);
+		return zipEntry;
+	};
+
+	this.putNextEntry = function(zipEntry) {
+		this.internalZipOutputStream.putNextEntry(zipEntry.getInternalObject());
+		var internalBytes = streams.toJavaBytes(zipEntry.getBytes());
+		this.internalZipOutputStream.write(internalBytes);
+//		zipEntry.getInternalObject().closeEntry();
+	};
+
+	this.close = function() {
+		this.internalZipOutputStream.finish();
+		this.internalZipOutputStream.flush();
+		this.internalZipOutputStream.close();
+	};
+
+}
+
+/**
  * ZipEntry object
  */
-function ZipEntry(internalZipEntry, internalZipInputStream) {
+function ZipEntry(internalZipEntry, internalZipInputStream, internalZipOutputStream) {
 	this.internalZipEntry = internalZipEntry;
 	this.internalZipInputStream = internalZipInputStream;
+	this.internalZipOutputStream = internalZipOutputStream;
+	this.bytes = null;
 
 	this.getInternalObject = function() {
 		return this.internalZipEntry;
+	};
+	
+	this.getInternalZipInputStream = function() {
+		return this.internalZipInputStream;
+	};
+	
+	this.getInternalZipOutputStream = function() {
+		return this.internalZipOutputStream;
+	};
+	
+	this.getBytes = function() {
+		if (this.internalZipOutputStream === null) {
+			throw new Error("This ZipEntry is not writeable");
+		}
+		return this.bytes;
 	};
 
 	this.getName = function() {
@@ -84,15 +142,10 @@ function ZipEntry(internalZipEntry, internalZipInputStream) {
 		return this.internalZipEntry.isDirectory();
 	};
 	
-	this.close = function() {
-		return this.internalZipEntry.close();
-	};
-	
-	this.isValid = function() {
-		return this.internalZipEntry !== null;
-	};
-	
 	this.readData = function() {
+		if (this.internalZipInputStream === null) {
+			throw new Error("This ZipEntry is not readable");
+		}
 		var internalBytesBuffer = java.lang.reflect.Array.newInstance(java.lang.Byte.TYPE, 2048);
 		var bytes = null;
 		var output = null;
@@ -104,13 +157,20 @@ function ZipEntry(internalZipEntry, internalZipInputStream) {
 			}
 			bytes = streams.toJavaScriptBytes(output.toByteArray());
 		} finally {
-			// we must always close the output file
 			if (output !== null) {
 				output.close();
 			}
 		}
 		return bytes;
 	};
+	
+	this.writeData = function(bytes) {
+		if (this.internalZipOutputStream === null) {
+			throw new Error("This ZipEntry is not writeable");
+		}
+		this.bytes = bytes;
+	}
+
 }
 
 
