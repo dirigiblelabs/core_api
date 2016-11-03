@@ -30,8 +30,7 @@ function testReadZip() {
 	var zipInputStream = zip.createZipInputStream(streams.createByteArrayInputStream(TEST_ZIP_BYTES));
 	var zipEntry = null;
 	try {
-		zipEntry = zipInputStream.getNextEntry();
-		while (zipEntry.isValid()) {
+		while ((zipEntry = zipInputStream.getNextEntry()) !== null) {
 			var path = zipEntry.getName();
 			console.info(path);
 			var bytes = zipEntry.readData();
@@ -39,7 +38,6 @@ function testReadZip() {
 			console.info(text);
 			assert.assertNotNull(bytes, 'The actual content bytes are null!');
 			assert.assertEquals(expectedContent, text, 'The expected content does not match the actual content bytes!');
-			zipEntry = zipInputStream.getNextEntry();
 		}
 	} finally {
 		zipInputStream.close();

@@ -33,6 +33,9 @@ function ZipInputStream(internalZipInputStream) {
 
 	this.getNextEntry = function() {
 	    var internalZipEntry = this.internalZipInputStream.getNextEntry();
+	    if (internalZipEntry === null) {
+	    	return null;
+    	}
 		return new ZipEntry(internalZipEntry, this.internalZipInputStream);
 	};
 	
