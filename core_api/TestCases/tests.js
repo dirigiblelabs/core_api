@@ -22,6 +22,7 @@ function getTests() {
 	tests = tests.concat(getDbTests());
 	tests = tests.concat(getDocTests());
 	tests = tests.concat(getIoTests());
+	tests = tests.concat(getServiceTests());
 	tests = tests.concat(getUtilsTests());
 	return tests;
 }
@@ -62,6 +63,12 @@ function getIoTests() {
 		'/test/io/file_test.js',
 		'/test/io/stream_convert_test.js',
 		'/test/io/stream_read_write_test.js'
+	];
+}
+
+function getServiceTests() {
+	return [
+		'/test/service/passwords_test.js'
 	];
 }
 
