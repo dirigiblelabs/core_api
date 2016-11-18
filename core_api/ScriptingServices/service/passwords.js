@@ -39,7 +39,7 @@ function getPasswordStorage() {
 	if (passwordStorage === null) {
 		try {
 			var passwordStorageService = env.get(JNDI_PASSWORD_STORAGE);
-			passwordStorage = $.getInitialContext().lookup(passwordStorageService + 'asd');
+			passwordStorage = $.getInitialContext().lookup(passwordStorageService);
 			if (passwordStorage === null) {
 				console.error('Password Storage is null!');
 				throw new Error('Password Storage is null!');
