@@ -155,15 +155,10 @@ function ZipEntry(internalZipEntry, internalZipInputStream, internalZipOutputStr
 		try {
 			output = new java.io.ByteArrayOutputStream();
 			var len = 0;
-			console.log("Buffer1 " + this.internalZipInputStream);
 			while ((len = this.internalZipInputStream.read(internalBytesBuffer)) > 0) {
-				console.log("Buffer2 ");
 				output.write(internalBytesBuffer, 0, len);
-				console.log("Buffer " + len);
 			}
-			output.flush();
 			bytes = streams.toJavaScriptBytes(output.toByteArray());
-			console.log("Bytes " + bytes);
 		} finally {
 			if (output !== null) {
 				output.close();
