@@ -31,12 +31,12 @@ Logger.prototype.log = function(message, level, err){
 		};
 		if(handlers){
 			for(var i=0; i<handlers.length; i++){
-				try{
+				try {
 					handlers[i].handle(logRecord);
-				}catch(err){
+				} catch(handlingError) {
 					//TODO: report to a specific handler error manager instead
-					console.error(err);
-					console.trace(err.stack);
+					console.error(handlingError);
+					console.trace(handlingError.stack);
 				}
 			}		
 		}

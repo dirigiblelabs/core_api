@@ -14,28 +14,20 @@ var ConsoleHandler = function(formatter){
 	this.levelToConsoleMethodMap[LEVELS.ERROR] = 'error';
 	this.levelToConsoleMethodMap[LEVELS.WARN] = 'warn';	
 	this.levelToConsoleMethodMap[LEVELS.DEBUG] = 'debug';
-	this.levelToConsoleMethodMap[LEVELS.INFO] = 'info';
-	this.levelToConsoleMethodMap[LEVELS.TRACE] = 'trace';
+	this.levelToConsoleMethodMap[LEVELS.TRACE] = this.levelToConsoleMethodMap[LEVELS.INFO] = 'info';
 };
 ConsoleHandler.prototype = Object.create(Handler.prototype);
 
 ConsoleHandler.prototype.handle = function(logRecord){
 	var message = this.formatter.format(logRecord);
 	console[this.levelToConsoleMethodMap[logRecord.level]](message);
-	if(logRecord.error)
-		console.trace(logRecord.error.stack);
-};
-
-var Formatter = exports.Formatter = function(){};
-Formatter.prototype.format = function(logRecord){
-	var ctxSegment = logRecord.loggerName?'['+logRecord.loggerName+']: ':'';
-	var errSegment = logRecord.error?logRecord.error.message:'';
-	return ctxSegment + logRecord.message + (errSegment? '\r\n' + errSegment : errSegment);
+	if(logRecord.error && logRecord.error.stack)
+		console.error(logRecord.error.stack);
 };
 
 exports.getHandlers = function(){
 	return [
-		new ConsoleHandler(new Formatter())
+		new ConsoleHandler()
 	];
 };
 })(exports);
