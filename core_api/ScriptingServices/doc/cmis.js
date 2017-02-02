@@ -398,4 +398,8 @@ exports.OBJECT_TYPE_POLICY = "cmis:policy";
 exports.OBJECT_TYPE_ITEM = "cmis:item";
 exports.OBJECT_TYPE_SECONDARY = "cmis:secondary";
 
+// --- UnfileObject ----
+exports.UNFILE_OBJECT_UNFILE = "unfile";
+exports.UNFILE_OBJECT_DELETESINGLEFILED = "deletesinglefiled";
+exports.UNFILE_OBJECT_DELETE = "delete";
 
