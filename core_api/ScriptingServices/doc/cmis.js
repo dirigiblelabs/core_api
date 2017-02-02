@@ -175,6 +175,10 @@ function Folder(internalFolder) {
 	this.rename = function(newName) {
 		return this.internalFolder.rename(newName, true);
 	};
+	
+	this.deleteTree = function() {
+		return this.internalFolder.deleteTree(true, org.apache.chemistry.opencmis.commons.enums.UnfileObject.DELETE, true);
+	};
 }
 
 /**
@@ -398,8 +402,4 @@ exports.OBJECT_TYPE_POLICY = "cmis:policy";
 exports.OBJECT_TYPE_ITEM = "cmis:item";
 exports.OBJECT_TYPE_SECONDARY = "cmis:secondary";
 
-// --- UnfileObject ----
-exports.UNFILE_OBJECT_UNFILE = "unfile";
-exports.UNFILE_OBJECT_DELETESINGLEFILED = "deletesinglefiled";
-exports.UNFILE_OBJECT_DELETE = "delete";
 
