@@ -11,6 +11,9 @@
 /* globals $ */
 /* eslint-env node, dirigible */
 
-exports.send = function(from, to, subject, content) {
-	$.getMailService().sendMail(from, to, subject, content);
+exports.send = function(from, to, subject, content, subType) {
+	var sent = $.getMailService().sendMail(from, to, subject, content, subType);
+	if (sent !== null && sent !== undefined && sent !== '') {
+		throw new Error(sent);
+	}
 };
